@@ -1,3 +1,5 @@
-website/__pycache__/__init__.cpython-312.pyc
-website/__pycache__/auth.cpython-312.pyc
-website/__pycache__/views.cpython-312.pyc
+venv
+instance
+.vscode
+website/__pycache__
+website/database.db
