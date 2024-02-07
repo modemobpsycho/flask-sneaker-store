@@ -1,5 +1,5 @@
-venv
 instance
 .vscode
-website/__pycache__
 website/database.db
+venv/
+__pycache__/

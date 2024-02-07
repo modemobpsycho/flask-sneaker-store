@@ -31,6 +31,9 @@
 				<div class="navbar-nav">
 					{% if user.is_authenticated %}
 					<a class="nav-item nav-link" id="home" href="/">Home</a>
+					<a class="nav-item nav-link" id="product" href="/product">Product</a>
+					<a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
+					<a class="nav-item nav-link" id="order" href="/order">Order</a>
 					<a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
 					{% else %}
 					<a class="nav-item nav-link" id="login" href="/login">Login</a>
