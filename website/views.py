@@ -25,7 +25,7 @@ def order():
 @views.route('/product')
 @login_required
 def product():
-    return render_template('order.html', user=current_user)
+    return render_template('product.html', user=current_user)
 
 
 @views.route('/checkout')
