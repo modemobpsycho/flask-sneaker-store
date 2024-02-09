@@ -1,7 +1,7 @@
 :root {
     --bg-color: #f5f5f5;
-    --text-color: #6c757d;
-    --accent-color: #33fff1;
+    --text-color: #323232;
+    --accent-color: #00c3d9;
     --contrast-color: #3d464d;
     --gray-color: #ccc;
     --red-color: #ee6e73;
@@ -64,23 +64,305 @@ ul.social-icons li {
     margin-right: 10px;
 }
 
-ul.social-icons a{
+ul.social-icons a {
     background-color: var(--accent-color);
     color: var(--contrast-color);
     width: 30px;
     height: 30px;
+    line-height: 30px;
     border-radius: 50%;
     float: left;
     text-align: center;
-    line-height: 30px;
     transition: all .3s;
 }
 
 ul.social-icons a:hover {
     background-color: var(--contrast-color);
-    color: var(--accent-color)
+    color: var(--accent-color);
 }
 
-.header-top.btn {
+.header-top .btn {
     background-color: #fff;
+}
+
+.header-logo {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: var(--accent-color);
+    transition: all .3s;
+}
+
+.header-logo:hover {
+    color: var(--contrast-color);
+}
+
+.cart-buttons .btn {
+    color: var(--contrast-color);
+    transition: all .3s;
+}
+
+.cart-buttons .btn:hover {
+    border: 1px solid var(--contrast-color);
+}
+
+.offcanvasCart-table .product-img-td {
+    width: 70px;
+    text-align: center;
+}
+
+.offcanvasCart-table img {
+    max-width: 50px;
+}
+
+.offcanvasCart-table a {
+    text-decoration: none;
+    display: block;
+}
+
+.offcanvasCart-table a:hover {
+    text-decoration: underline;
+}
+
+.header-bottom {
+    border-top: 3px solid var(--accent-color);
+    box-shadow: 0 10px 10px rgba(0, 0, 0, .3);
+}
+
+.header-bottom .navbar,
+.header-bottom .navbar .dropdown-menu {
+    background-color: var(--contrast-color) !important;
+}
+
+.header-bottom .nav-item:first-child .nav-link {
+    padding-left: 0;
+}
+
+.header-bottom .navbar .nav-link {
+    color: #fff;
+    transition: .3s all;
+    letter-spacing: .1rem;
+}
+
+.header-bottom .navbar .nav-link:hover {
+    color: var(--accent-color);
+}
+
+.header-bottom .navbar .nav-link.active {
+    color: var(--accent-color);
+}
+
+.header-bottom .navbar .dropdown-menu {
+    margin-top: 7px;
+}
+
+.headernav-scroll.header-bottom .navbar .offcanvas:not(.show) .nav-link {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+/* ============================= Header ============================ */
+
+
+/* ============================= Main ============================ */
+
+
+/* ============================= Carousel ============================ */
+.carousel-caption {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
+.carousel-caption p {
+    font-size: 1.5rem;
+}
+
+/* ============================= Carousel ============================ */
+
+
+/* ============================= Advantages ============================ */
+
+.advantages .item {
+    background-color: #fff;
+    text-align: center;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all .3s;
+}
+
+.advantages .item:hover {
+    box-shadow: 0 15px 50px -20px var(--accent-color);
+}
+
+.advantages i {
+    font-size: 70px;
+    color: var(--accent-color);
+}
+
+section {
+    padding: 50px 0;
+}
+
+.section-title {
+    position: relative;
+    text-transform: uppercase;
+    color: var(--contrast-color);
+    font-weight: 700;
+}
+
+.section-title span {
+    background-color: var(--bg-color);
+    padding-right: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.section-title::after {
+    position: absolute;
+    content: "";
+    width: 100%;
+    top: 50%;
+    left: 0;
+    border-top: 1px solid var(--text-color);
+}
+
+label.required::before {
+    content: '* ';
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.product-card {
+    transition: all .3s;
+    border: 1px solid var(--gray-color);
+    background-color: #fff;
+    position: relative;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 20px -15px rgba(0, 0, 0, 0.75);
+}
+
+
+.product-thumb {
+    text-align: center;
+}
+
+.product-thumb img {
+    max-height: 250px;
+}
+
+.product-details {
+    padding: 10px 20px;
+}
+
+.product-details h4 {
+    font-size: 1.2rem;
+}
+
+.product-details h4 a {
+    height: 45px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+.product-details h4 a:hover {
+    color: var(--accent-color);
+}
+
+.product-excerpt {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    height: 45px;
+    overflow: hidden;
+}
+
+.product-bottom-details {
+    border-top: 1px solid var(--light-grey-color);
+    padding-top: 1rem;
+}
+
+.product-price {
+    font-size: 18px;
+    color: var(--red-color);
+    font-weight: 600;
+}
+
+.product-price small {
+    color: var(--gray-color);
+    font-weight: 400;
+    text-decoration: line-through;
+    font-size: 0.8rem;
+}
+
+.owl-carousel-full .owl-item img {
+    display: inline-block;
+    width: auto;
+}
+
+.about-us {
+    background-color: #fff;
+}
+
+footer {
+    background-color: var(--contrast-color);
+    padding: 50px 0;
+    color: #fff;
+}
+
+footer h4 {
+    color: var(--accent-color);
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+footer a:hover {
+    color: var(--accent-color);
+}
+
+.footer-icons {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    font-size: 20px;
+}
+
+.about-us .section-title span,
+.sidebar .section-title span,
+.bg-white .section-title span {
+    background-color: #fff;
+}
+
+@media only screen and (min-width : 992px) {
+
+    .header-bottom .navbar .nav-link {
+        padding: 1rem;
+    }
+}
+
+@media only screen and (min-width : 768px) {
+    .sidebar .collapse-filters {
+        display: block;
+    }
+
+    .sidebar .collapse-filters-btn {
+        display: none;
+    }
+}
+
+@media only screen and (max-width : 500px) {
+    .product-content-details .nav-tabs .nav-link {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
 }
