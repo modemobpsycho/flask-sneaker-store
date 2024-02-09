@@ -1,48 +1,97 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {%block content
-%}
-<form method="POST">
-	<h3 align="center">Sign Up</h3>
-	<div class="form-group">
-		<label for="email">Email Address</label>
-		<input
-			type="email"
-			class="form-control"
-			id="email"
-			name="email"
-			placeholder="Enter email"
-		/>
-	</div>
-	<div class="form-group">
-		<label for="firstName">First Name</label>
-		<input
-			type="text"
-			class="form-control"
-			id="firstName"
-			name="firstName"
-			placeholder="Enter first name"
-		/>
-	</div>
-	<div class="form-group">
-		<label for="password1">Password</label>
-		<input
-			type="password"
-			class="form-control"
-			id="password1"
-			name="password1"
-			placeholder="Enter password"
-		/>
-	</div>
-	<div class="form-group">
-		<label for="password2">Password (Confirm)</label>
-		<input
-			type="password"
-			class="form-control"
-			id="password2"
-			name="password2"
-			placeholder="Confirm password"
-		/>
-	</div>
-	<br />
-	<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+{% extends "base.html" %} 
+
+{% block main %}
+
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+    }
+
+    .form-wrapper {
+        max-width: 500px; /* Устанавливаем новую максимальную ширину формы */
+        width: 80%; /* Добавляем новое свойство width для контроля ширины формы */
+        margin: 0 auto; /* Центрируем форму по горизонтали */
+        padding: 50px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .button-wrapper {
+        text-align: center;
+    }
+</style>
+
+<div class="container">
+    <div class="form-wrapper">
+		<form method="POST">
+			<h3 align="center">Sign Up</h3>
+			<div class="form-group">
+				<label for="email">Email Address</label>
+				<input
+					type="email"
+					class="form-control"
+					id="email"
+					name="email"
+					placeholder="Enter email"
+				/>
+			</div>
+			<div class="form-group">
+				<label for="firstName">First Name</label>
+				<input
+					type="text"
+					class="form-control"
+					id="firstName"
+					name="firstName"
+					placeholder="Enter first name"
+				/>
+			</div>
+			<div class="form-group">
+				<label for="password1">Password</label>
+				<input
+					type="password"
+					class="form-control"
+					id="password1"
+					name="password1"
+					placeholder="Enter password"
+				/>
+			</div>
+			<div class="form-group">
+				<label for="password2">Password (Confirm)</label>
+				<input
+					type="password"
+					class="form-control"
+					id="password2"
+					name="password2"
+					placeholder="Confirm password"
+				/>
+			</div>
+			<br />
+			<div class="button-wrapper">
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</form>
+    </div>
+</div>
+<br>
+
 {% endblock%}
+
+{% block hide_main %}
+{% endblock %}
