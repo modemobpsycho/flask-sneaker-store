@@ -76,6 +76,13 @@ ul.social-icons a {
     transition: all .3s;
 }
 
+.user_name {
+    font-size: 16px;
+    margin-right: 5px;
+    padding: 2px;
+    display: flex;
+}
+
 ul.social-icons a:hover {
     background-color: var(--contrast-color);
     color: var(--accent-color);

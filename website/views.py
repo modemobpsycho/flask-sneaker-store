@@ -31,4 +31,8 @@ def product():
 @views.route('/checkout')
 @login_required
 def checkout():
-    return render_template('/checkout', user=current_user)
+    return render_template('checkout.html', user=current_user)
+
+@views.route('/category')
+def category():
+    return render_template('category.html', user=current_user)
