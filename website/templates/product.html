@@ -1,4 +1,53 @@
-{% extends "base.html" %} {% block title %}Our sneakers{% endblock %} {%block
-content %}
-<h1>This is product</h1>
-{% endblock%}
+{% extends "base.html" %}
+{% block hide_carousel %}
+{% endblock %}
+{% block hide_advantages %}
+{% endblock %}
+
+{% block main %}
+<section class="featured-products"> 
+    <div class="container-fluid"> 
+        <div class="row mb-5" >
+            <div class="col-12 text-center">
+                <h2 class="section-title">
+                    <span style="padding-left: 1rem"> Catalog </span>
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            {% for product in products %}
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <div class="product-card">
+                        <div class="product-thumb">
+                            <a href="/product"><img src="{{ product.image_url }}" alt=""></a>
+                        </div>
+                        <div class="product-details">
+                            <h4>
+                                <a href="/product">{{ product.name }}</a>
+                            </h4>
+                            <p class="product-excerpt">{{ product.description }}</p>
+                            
+                            <div class="product-sizes">
+                                {% for size in product.sizes %}
+                                    <div class="product-size {% if not size.available %}unavailable{% endif %}">
+                                        {{ size.size }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="product-bottom-details d-flex justify-content-between">
+                                <div class="product-price">
+                                    ${{ product.price }}
+                                </div>
+                                <div class="product-links">
+                                    <a href="#" class="btn btn-outline-secondary add-to-cart"><i class="fas fa-shopping-cart"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    </section>
+{% endblock %}

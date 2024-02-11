@@ -1,13 +1,14 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user, user_accessed
-
+from .models import Product, Size
+from . import db
 views = Blueprint("views", __name__)
 
 
 @views.route("/")
 @login_required
 def home():
-    return render_template('home.html', user=current_user)
+    return render_template('base.html', user=current_user)
 
 
 @views.route('/cart')
@@ -24,8 +25,10 @@ def order():
 
 @views.route('/product')
 @login_required
-def product():
-    return render_template('product.html', user=current_user)
+def product_page():
+    products = Product.query.all()
+    sizes = Size.query.all()
+    return render_template('product.html', products=products, sizes=sizes, user=current_user)
 
 
 @views.route('/checkout')
