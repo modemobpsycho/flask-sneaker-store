@@ -1,13 +1,8 @@
-{% extends "base.html" %}
-{% block hide_carousel %}
-{% endblock %}
-{% block hide_advantages %}
-{% endblock %}
-
-{% block main %}
-<section class="featured-products"> 
-    <div class="container-fluid"> 
-        <div class="row mb-5" >
+{% extends "base.html" %} {% block hide_carousel %} {% endblock %} {% block
+hide_advantages %} {% endblock %} {% block main %}
+<section class="featured-products">
+    <div class="container-fluid">
+        <div class="row mb-5">
             <div class="col-12 text-center">
                 <h2 class="section-title">
                     <span style="padding-left: 1rem"> Sneakers </span>
@@ -16,45 +11,70 @@
         </div>
         <div class="row">
             {% for product in products %}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <div class="product-card">
-                        <div class="product-thumb">
-                            <a href="/product"><img src="{{ product.image_url }}" alt=""></a>
-                        </div>
-                        <div class="product-details">
-                            <h4>
-                                <a href="/product">{{ product.name }}</a>
-                            </h4>
-                            <p class="product-excerpt">{{ product.description }}</p>
-                            
-                            <div class="product-sizes">
-                                {% for size in product.sizes %}
-                                    <div class="product-size {% if not size.available %}unavailable{% endif %}">
-                                        {{ size.size }}
-                                    </div>
-                                {% endfor %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                <div class="product-card">
+                    <div class="product-thumb">
+                        <a href="/product"
+                            ><img src="{{ product.image_url }}" alt=""
+                        /></a>
+                    </div>
+                    <div class="product-details">
+                        <h4>
+                            <a href="/product">{{ product.name }}</a>
+                        </h4>
+                        <p class="product-excerpt">{{ product.description }}</p>
+
+                        <div class="product-sizes">
+                            {% for size in product.sizes %}
+                            <div
+                                class="product-size {% if not size.available %}unavailable{% endif %}"
+                            >
+                                {{ size.size }}
                             </div>
-                            
-                            <div class="product-bottom-details d-flex justify-content-between">
-                                <div class="product-price">
-                                    ${{ product.price }}
+                            {% endfor %}
+                        </div>
+
+                        <div
+                            class="product-bottom-details d-flex justify-content-between"
+                        >
+                            <div class="product-price">
+                                ${{ product.price }}
+                            </div>
+                            <div class="product-card">
+                                <div class="product-links">
+                                    <form
+                                        action="{{ url_for('views.add_to_favorites') }}"
+                                        method="POST"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="product_id"
+                                            value="{{ product.id }}"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger add-to-favorites"
+                                        >
+                                            <i class="fa-solid fa-heart"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                                <div class="product-card">
-                                    <div class="product-links">
-                                        <a href="/add-to-favorites?product_id={{ product.id }}" class="btn btn-outline-danger add-to-favorites"><i class="fa-solid fa-heart"></i></a>
-                                    </div>
-                                </div>
-                                <div class="product-card">
-                                    <div class="product-links">
-                                        <a href="/add-to-cart?product_id={{ product.id }}" class="btn btn-outline-success add-to-cart"><i class="fas fa-shopping-cart"></i></a>
-                                    </div>
+                            </div>
+                            <div class="product-card">
+                                <div class="product-links">
+                                    <a
+                                        href="/add-to-cart?product_id={{ product.id }}"
+                                        class="btn btn-outline-success add-to-cart"
+                                        ><i class="fas fa-shopping-cart"></i
+                                    ></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             {% endfor %}
         </div>
     </div>
-    </section>
+</section>
 {% endblock %}
