@@ -259,6 +259,30 @@ label.required::before {
     max-height: 250px;
 }
 
+.product-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.product-size {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.product-size.unavailable {
+    background-color: #4f4f4f;
+    color: #b6b6b6; /* Цвет текста внутри тусклого квадратика */
+}
+
 .product-details {
     padding: 10px 20px;
 }
