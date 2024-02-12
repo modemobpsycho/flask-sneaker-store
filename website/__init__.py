@@ -1,7 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask_migrate import Migrate
 from flask_login import LoginManager
+from flask_session import Session
+
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -11,7 +14,16 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "mrobs59fghdfg"
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
+    
     db.init_app(app)
+    migrate = Migrate(app, db)
+    
+    app.config['SESSION_TYPE'] = 'sqlalchemy'
+    app.config['SESSION_SQLALCHEMY'] = db
+    app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
+    app.config['SESSION_SQLALCHEMY_MODEL'] = 'website.models.CustomSessionModel'
+    
+    Session(app)
 
     from .views import views
     from .auth import auth
@@ -34,6 +46,7 @@ def create_app():
 
     return app
 
+from website.models import CustomSessionModel
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):
