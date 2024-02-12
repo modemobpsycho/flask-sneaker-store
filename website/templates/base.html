@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="static/owlcarousel/owl.theme.default.min.css">
 		<link rel="stylesheet" href="static/css/styles.css">
 		<link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
+		
 	</head>
 
 	<body>
@@ -30,17 +31,17 @@
 							<div class="col-sm-4 d-none d-sm-block">
 								<ul class="social-icons d-flex justify-content-center">
 									<li>
-										<a href="#">
+										<a href="https://www.youtube.com/" target="_blank">
 											<i class="fa-brands fa-youtube"></i>
 										</a>
 									</li>
 									<li>
-										<a href="#">
+										<a href="https://ru-ru.facebook.com/" target="_blank">
 											<i class="fa-brands fa-facebook-f"></i>
 										</a>
 									</li>
 									<li>
-										<a href="#">
+										<a href="https://www.instagram.com/" target="_blank">
 											<i class="fa-brands fa-instagram"></i>
 										</a>
 									</li>
@@ -49,6 +50,11 @@
 							<div class="col-6 col-sm-4">
 								<div class="header-top-account d-flex justify-content-end">
 									<div class="btn-group me-2">
+										<div class = "user_name">
+											{% if current_user.is_authenticated %}
+    											<span class="user-name">Hi, {{current_user.first_name }}</span>
+											{% endif %}
+										</div>
 										<div class="dropdown">
 											<button class="btn btn-sm dropdown-toggle" type="button"
 												data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,6 +66,9 @@
 												</li>
 												<li>
 													<a class="dropdown-item" href="/sign-up">Sign Up</a>
+												</li>
+												<li>
+													<a class="dropdown-item" href="/logout">Logout</a>
 												</li>
 											</ul>
 										</div>
@@ -106,7 +115,6 @@
 									</div>
 								</form>
 							</div>
-	
 						</div>
 					</div>
 	
@@ -128,15 +136,16 @@
 									aria-label="Close"></button>
 							</div>
 							<div class="offcanvas-body">
+								{% if user.is_authenticated %}
 								<ul class="navbar-nav">
 									<li class="nav-item">
 										<a class="nav-link active" aria-current="page" href="/">Home</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="/about">About</a>
+										<a class="nav-link" href="#about">About</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="/contact">Contact</a>
+										<a class="nav-link" href="#contacts">Contact</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" href="/order">Payment</a>
@@ -151,17 +160,44 @@
 										</a>
 										<ul class="dropdown-menu dropdown-menu-end">
 											<li>
-												<a class="dropdown-item" href="category.html">Shoes</a>
+												<a class="dropdown-item" href="/product">Shoes</a>
 											</li>
 											<li>
-												<a class="dropdown-item" href="category.html">Socks</a>
+												<a class="dropdown-item" href="/product">Socks</a>
 											</li>
 											<li>
-												<a class="dropdown-item" href="category.html">Care products</a>
+												<a class="dropdown-item" href="/product">Care products</a>
 											</li>
 										</ul>
 									</li>
 								</ul>
+								{% else %}
+								<ul class="navbar-nav">
+									<li class="nav-item">
+										<a class="nav-link active" aria-current="page" href="/login">Login</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="/sign-up">Sign Up</a>
+									</li>
+									<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" href="/product" role="button" data-bs-toggle="dropdown"
+											aria-expanded="false" data-bs-auto-close="outside">
+											Catalog
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href= "/product">Shoes</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/product">Socks</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="/product">Care products</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+								{% endif %}
 							</div>
 						</div>
 	
@@ -178,6 +214,7 @@
 	
 					</div>
 				</nav>
+				
 			</div>
 			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
 				<div class="offcanvas-header">
@@ -187,8 +224,6 @@
 				<div class="offcanvas-body">
 					<div class="table-responsive">
 						<table class="table offcanvasCart-table">
-							<tbody>
-							</tbody>
 							<tfoot>
 								<tr>
 									<td colspan="4" class="text-end">Total:</td>
@@ -196,34 +231,33 @@
 							</tfoot>
 						</table>
 					</div>
-	
 					<div class="text-end mt-3">
-						<a href="#" class="btn btn-outline-warning">Cart</a>
-						<a href="#" class="btn btn-outline-secondary">Checkout</a>
+						<a href="/cart" class="btn btn-outline-warning">Cart</a>
+						<a href="/checkout" class="btn btn-outline-secondary">Checkout</a>
 					</div>
 	
 					<div class="dropdown mt-3">
 						<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-							Dropdown button
+							More
 						</button>
 						<ul class="dropdown-menu">
 							<li>
-								<a class="dropdown-item closecart" href="#footer" data-href="footer">Footer</a>
+								<a class="dropdown-item closecart" href="#footer" data-href="footer">Contacts</a>
 							</li>
 							<li>
-								<a class="dropdown-item closecart" href="#about" data-href="about">About</a>
+								<a class="dropdown-item closecart" href="#about" data-href="about">About us</a>
 							</li>
 							<li>
-								<a class="dropdown-item closecart" href="#map" data-href="map">Map</a>
+								<a class="dropdown-item closecart" href="#map" data-href="map">Where are we?</a>
 							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
-
+			{% block main %}
 			<main class="main">
-
-				<div id="carousel" class="carousel slide carousel-fade">
+				{% block hide_carousel %}
+				<div id="carousel" class="carousel slide carousel-fade" >
 					<div class="carousel-indicators">
 						<button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active"
 							aria-current="true" aria-label="Slide 1"></button>
@@ -278,7 +312,8 @@
 						<span class="visually-hidden">Next</span>
 					</button>
 				</div>
-	
+				{% endblock hide_carousel %}
+				{% block hide_advantages %}
 				<section class="advantages">
 					<div class="container-fluid">
 						<div class="row mb-5">
@@ -329,6 +364,8 @@
 	
 					</div>
 				</section>
+				{% endblock hide_advantages %}
+				{% block hide_products %}
 				<section class="featured-products">
 					<div class="container-fluid">
 						<div class="row mb-5">
@@ -344,16 +381,15 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p2.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p2.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 1 Lorem ipsum.</a>
+											<a href="/product">Product 1 Lorem ipsum.</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor!</p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -368,11 +404,11 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p1.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p1.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 2</a>
+											<a href="/product">Product 2</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor</p>
 										<div class="product-bottom-details d-flex justify-content-between">
@@ -391,11 +427,11 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p2.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p2.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 3 Lorem ipsum</a>
+											<a href="/product">Product 3 Lorem ipsum</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum</p>
 										<div class="product-bottom-details d-flex justify-content-between">
@@ -414,16 +450,15 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p2.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p2.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 4</a>
+											<a href="/product">Product 4</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor</p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -438,18 +473,17 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p1.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p1.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 5 Lorem ipsum dolor, sit amet consectetur
+											<a href="/product">Product 5 Lorem ipsum dolor, sit amet consectetur
 												adipisicing.</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
 											Placeat, aperiam!</p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -464,16 +498,15 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p1.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p1.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 6</a>
+											<a href="/product">Product 6</a>
 										</h4>
 										<p class="product-excerpt"></p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -488,17 +521,16 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p2.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p2.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 7</a>
+											<a href="/product">Product 7</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
 											Placeat, aperiam!</p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -513,16 +545,15 @@
 							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
 								<div class="product-card">
 									<div class="product-thumb">
-										<a href="product.html"><img src="static/images/p2.jpg" alt=""></a>
+										<a href="/product"><img src="static/images/p2.jpg" alt=""></a>
 									</div>
 									<div class="product-details">
 										<h4>
-											<a href="product.html">Product 8 Lorem</a>
+											<a href="/product">Product 8 Lorem</a>
 										</h4>
 										<p class="product-excerpt">Lorem ipsum dolor</p>
 										<div class="product-bottom-details d-flex justify-content-between">
 											<div class="product-price">
-												<small>$70</small>
 												$65
 											</div>
 											<div class="product-links">
@@ -536,6 +567,8 @@
 						</div>
 					</div>
 				</section>
+				{% endblock hide_products %}
+				{% block about_us %}
 				<section class="about-us" id="about">
 					<div class="container fluid">
 						<div class="row mb-5">
@@ -547,16 +580,19 @@
 						</div>
 						<div class="row">
 							<div class="col-12">
-								<p>Lorem ipsum dolor sit ame</p>
-								<p>Laboriosam, esse dolore incidunt voluptas ea enim quasi laudantium quod ipsum asperiores,
-									labore, similique cum accusamus optio</p>
-								<p>Voluptatem, maiores dicta? Quod.</p>
+								<p>Welcome to Sneakers House - your source for stylish and high-quality sneakers!</p>
+								<p>We curate the best models from top brands to cater to your unique style.</p>
+								<p>Our team of sneaker enthusiasts is here to provide excellent service and help you find the perfect pair.</p>
+								<p>Join our Sneakers House family and discover the confidence and style that come with our fashionable sneakers!</p>
 							</div>
 						</div>
 					</div>
 				</section>
-				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1115.8614259378976!2d14.422333221701901!3d50.088602202709126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94e99076ea67%3A0x6cf45fa185ee1f6!2zTWFzbsOhIDYxOC8yYSwgMTEwIDAwIFN0YXLDqSBNxJtzdG8sINCn0LXRhdC40Y8!5e0!3m2!1sru!2sby!4v1707475724496!5m2!1sru!2sby" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-
+				{% endblock about_us%}
+				{% block map %}
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1115.8614259378976!2d14.422333221701901!3d50.088602202709126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94e99076ea67%3A0x6cf45fa185ee1f6!2zTWFzbsOhIDYxOC8yYSwgMTEwIDAwIFN0YXLDqSBNxJtzdG8sINCn0LXRhdC40Y8!5e0!3m2!1sru!2sby!4v1707475724496!5m2!1sru!2sby" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" id="map"></iframe>
+				{% endblock map %}
+			{% endblock main %}
 			</main>
 			<footer class="footer" id="footer">
 				<div class="container-fluid">
@@ -564,7 +600,7 @@
 						<div class="col-md-3 col-6">
 							<h4>Information</h4>
 							<ul class="list-unstyled">
-								<li><a href="index.html">Home</a></li>
+								<li><a href="/">Home</a></li>
 								<li><a href="#">Payment</a></li>
 								<li><a href="#">Delivery</a></li>
 								<li><a href="#">Contacts</a></li>
@@ -579,7 +615,7 @@
 							</ul>
 						</div>
 	
-						<div class="col-md-3 col-6">
+						<div class="col-md-3 col-6" id="contacts">
 							<h4>Contacts</h4>
 							<ul class="list-unstyled">
 								<li><a href="tel:1234567890">123-456-7890</a></li>
@@ -599,60 +635,6 @@
 				</div>
 			</footer>
 		</div>
-
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<div class="logo-container">
-				<a class="navbar-brand" href="/">
-					<img
-						src="{{ url_for('static', filename='images/logo.jpg') }}"
-						width="30"
-						height="30"
-						alt="Logo"
-					/>
-					<span class="logo-text">Sneakers House</span>
-				</a>
-			</div>
-			<button
-				class="navbar-toggler"
-				type="button"
-				data-toggle="collapse"
-				data-target="#navbar"
-			>
-				<span class="navbar-toggler-icon"> </span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbar">
-				<div class="navbar-nav">
-					{% if user.is_authenticated %}
-					<a class="nav-item nav-link" id="home" href="/">Home</a>
-					<a class="nav-item nav-link" id="product" href="/product">Product</a>
-					<a class="nav-item nav-link" id="cart" href="/cart">Cart</a>
-					<a class="nav-item nav-link" id="order" href="/order">Order</a>
-					<a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-					{% else %}
-					<a class="nav-item nav-link" id="login" href="/login">Login</a>
-					<a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
-					{% endif %}
-				</div>
-			</div>
-		</nav>
-		{% with messages = get_flashed_messages(with_categories=true) %} {% if
-		messages %} {% for category, message in messages %} {% if category ==
-		'error'%}
-		<div class="alert alert-danger alter-dismissable fade show" role="alert">
-			{{ message }}
-			<button type="button" class="close" data-dismiss="alert">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		{% else %}
-		<div class="alert alert-success alter-dismissable fade show" role="alert">
-			{{ message }}
-			<button type="button" class="close" data-dismiss="alert">
-				<span aria-hidden="true">&times;</span>
-			</button>
-		</div>
-		{% endif %} {% endfor %} {% endif %} {% endwith %}
-		<div class="container">{%block content %} {% endblock%}</div>
 		<script
 			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"

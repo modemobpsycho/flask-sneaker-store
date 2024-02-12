@@ -1,7 +1,16 @@
 {% extends "base.html" %} 
+{% block hide_carousel %}
+{% endblock %}
+{% block hide_advantages %}
+{% endblock %}
+{% block hide_products %}
+{% endblock %}
+{% block about_us %}
+{% endblock %}
+{% block map %}
+{% endblock %}
 
 {% block main %}
-
 <style>
     .container {
         display: flex;
@@ -11,7 +20,7 @@
     }
 
     .form-wrapper {
-        max-width: 300px; /* Устанавливаем максимальную ширину формы */
+        max-width: 300px;
         padding: 50px;
     }
 
@@ -66,6 +75,4 @@
     </div>
 </div>
 <br>
-{% endblock %}
-{% block hide_main %}
 {% endblock %}
