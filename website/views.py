@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user, user_accessed
 from .models import Product, Size
 from . import db
@@ -36,6 +36,42 @@ def product_page():
 def checkout():
     return render_template('checkout.html', user=current_user)
 
+
 @views.route('/category')
 def category():
     return render_template('category.html', user=current_user)
+
+
+@views.route('/add-to-cart', methods=['GET'])
+@login_required
+def add_to_cart():
+    product_id = request.args.get('product_id')
+
+    return redirect(url_for('views.cart'))
+
+
+@views.route('/add-to-favorites', methods=['GET', 'POST'])
+@login_required
+def add_to_favorites():
+    if request.method == "POST":
+        product_id = request.form.get('product_id')
+
+        if product_id:
+            try:
+                product_id = int(product_id)
+            except ValueError:
+                flash('Неправильный идентификатор товара!', 'error')
+                return redirect(request.referrer or url_for('views.home'))
+
+            product = Product.query.get(product_id)
+
+            if product:
+                current_user.add_to_favorites(product)
+                db.session.commit()
+                flash('Товар успешно добавлен в избранные!', 'success')
+            else:
+                flash('Товар не найден!', 'error')
+        else:
+            flash('Неправильный идентификатор товара!', 'error')
+
+    return redirect(request.referrer or url_for('views.cart'))

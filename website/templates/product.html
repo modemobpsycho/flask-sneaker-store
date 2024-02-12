@@ -10,7 +10,7 @@
         <div class="row mb-5" >
             <div class="col-12 text-center">
                 <h2 class="section-title">
-                    <span style="padding-left: 1rem"> Catalog </span>
+                    <span style="padding-left: 1rem"> Sneakers </span>
                 </h2>
             </div>
         </div>
@@ -39,8 +39,15 @@
                                 <div class="product-price">
                                     ${{ product.price }}
                                 </div>
-                                <div class="product-links">
-                                    <a href="#" class="btn btn-outline-secondary add-to-cart"><i class="fas fa-shopping-cart"></i></a>
+                                <div class="product-card">
+                                    <div class="product-links">
+                                        <a href="/add-to-favorites?product_id={{ product.id }}" class="btn btn-outline-danger add-to-favorites"><i class="fa-solid fa-heart"></i></a>
+                                    </div>
+                                </div>
+                                <div class="product-card">
+                                    <div class="product-links">
+                                        <a href="/add-to-cart?product_id={{ product.id }}" class="btn btn-outline-success add-to-cart"><i class="fas fa-shopping-cart"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
