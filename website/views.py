@@ -67,13 +67,16 @@ def category():
 
 @views.route("/search", methods=["GET", "POST"])
 def search():
-    if request.method == "POST":
-        search_query = request.form.get("search_query")
-        products = Product.query.filter(
-            func.lower(Product.name).like(f"%{search_query.lower()}%")
-        ).all()
+    if request.method == "GET":
+        search_query = request.args.get("search_query")
+        if search_query is not None:
+            products = Product.query.filter(
+                func.lower(Product.name).like(f"%{search_query.lower()}%")
+            ).all()
+        else:
+            products = []
         return render_template(
-            "search_results.html", products=products, query=search_query
+            "search.html", products=products, query=search_query, user=current_user
         )
     else:
         return render_template("search.html", user=current_user)
