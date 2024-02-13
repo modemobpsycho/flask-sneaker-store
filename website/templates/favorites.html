@@ -5,12 +5,12 @@ hide_advantages %} {% endblock %} {% block main %}
         <div class="row mb-5">
             <div class="col-12 text-center">
                 <h2 class="section-title">
-                    <span style="padding-left: 1rem"> Sneakers </span>
+                    <span style="padding-left: 1rem"> Your likes </span>
                 </h2>
             </div>
         </div>
         <div class="row">
-            {% if products %} {% for product in products %}
+            {% for product in user_favorites %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                 <div class="product-card">
                     <div class="product-thumb">
@@ -73,14 +73,7 @@ hide_advantages %} {% endblock %} {% block main %}
                     </div>
                 </div>
             </div>
-            {% endfor %} {% else %}
-            <div class="col-12">
-                <h1>Search results for: "{{ query }}".</h1>
-                <p style="padding-left: 4px">
-                    It seems we can't find what you're looking for.
-                </p>
-            </div>
-            {% endif %}
+            {% endfor %}
         </div>
     </div>
 </section>
