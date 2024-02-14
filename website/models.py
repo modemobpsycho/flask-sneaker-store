@@ -85,3 +85,7 @@ class User(db.Model, UserMixin):
 
     def get_favorites(self):
         return self.favorites.all()
+
+    def remove_from_favorites(self, product):
+        if product in self.favorite_products:
+            self.favorite_products.remove(product)

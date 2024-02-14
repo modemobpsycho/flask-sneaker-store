@@ -139,3 +139,39 @@ def add_to_favorites():
         flash("Product is undefined!", "error")
 
     return redirect(request.referrer or url_for("views.favorites"))
+
+
+@views.route("/remove-from-favorites", methods=["POST"])
+@login_required
+def remove_from_favorites():
+    product_id = request.form.get("product_id")
+    product_id = int(product_id)
+
+    product = Product.query.get(product_id)
+
+    if product:
+        if current_user.has_favorited(product):
+            current_user.remove_from_favorites(product)
+            db.session.commit()
+
+            user_favorites_count = UserFavoritesCount.query.filter_by(
+                user_id=current_user.id
+            ).first()
+            if user_favorites_count:
+                user_favorites_count.favorites_count -= 1
+            else:
+                user_favorites_count = UserFavoritesCount(
+                    user_id=current_user.id, favorites_count=0
+                )
+                db.session.add(user_favorites_count)
+
+            db.session.commit()
+
+            session["favorites_count"] = user_favorites_count.favorites_count
+
+        else:
+            flash("Product does not exist in favorites!", "info")
+    else:
+        flash("Product is undefined!", "error")
+
+    return redirect(request.referrer or url_for("views.favorites"))

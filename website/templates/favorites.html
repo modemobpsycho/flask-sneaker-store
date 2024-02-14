@@ -43,7 +43,7 @@ hide_advantages %} {% endblock %} {% block main %}
                             <div class="product-card">
                                 <div class="product-links">
                                     <form
-                                        action="{{ url_for('views.add_to_favorites') }}"
+                                        action="{{ url_for('views.remove_from_favorites') }}"
                                         method="POST"
                                     >
                                         <input
@@ -53,9 +53,12 @@ hide_advantages %} {% endblock %} {% block main %}
                                         />
                                         <button
                                             type="submit"
-                                            class="btn btn-outline-danger add-to-favorites"
+                                            class="btn btn-outline-danger remove_from_favorites"
                                         >
-                                            <i class="fa-solid fa-heart"></i>
+                                            <i
+                                                class="fa fa-times"
+                                                aria-hidden="true"
+                                            ></i>
                                         </button>
                                     </form>
                                 </div>
