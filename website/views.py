@@ -1,3 +1,4 @@
+import random
 from flask import Blueprint, flash, redirect, render_template, request, url_for, session
 from flask_login import login_required, current_user
 from sqlalchemy import func
@@ -10,7 +11,13 @@ views = Blueprint("views", __name__)
 @views.route("/")
 @login_required
 def home():
-    return render_template("base.html", user=current_user)
+    products = Product.query.all()
+    random.shuffle(products)
+    random_products = products[:4]
+    sizes = Size.query.all()
+    return render_template(
+        "base.html", user=current_user, products=random_products, sizes=sizes
+    )
 
 
 @views.route("/cart")
