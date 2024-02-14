@@ -18,10 +18,13 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
-        <link rel="stylesheet" href="static/owlcarousel/owl.carousel.min.css" />
         <link
             rel="stylesheet"
-            href="static/owlcarousel/owl.theme.default.min.css"
+            href="static/owlcarousel/dist/assets/owl.carousel.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="static/owlcarousel/dist/assets/owl.theme.default.min.css"
         />
         <link
             rel="stylesheet"
@@ -295,8 +298,8 @@
                                             <li>
                                                 <a
                                                     class="dropdown-item"
-                                                    href="{{ url_for('views.category', category='shoes') }}"
-                                                    >Shoes</a
+                                                    href="{{ url_for('views.category', category='sneakers') }}"
+                                                    >Sneakers</a
                                                 >
                                             </li>
                                             <li>
@@ -309,7 +312,7 @@
                                             <li>
                                                 <a
                                                     class="dropdown-item"
-                                                    href="{{ url_for('views.category', category='care') }}"
+                                                    href="{{ url_for('views.category', category='care products') }}"
                                                     >Care products</a
                                                 >
                                             </li>
@@ -756,148 +759,80 @@
                         </div>
 
                         <div class="row">
+                            {% for product in products %}
                             <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                                 <div class="product-card">
                                     <div class="product-thumb">
                                         <a href="/product"
                                             ><img
-                                                src="static/images/p5.jpg"
+                                                src="{{ product.image_url }}"
                                                 alt=""
                                         /></a>
                                     </div>
                                     <div class="product-details">
                                         <h4>
-                                            <a href="/product">Product 1</a>
+                                            <a href="/product"
+                                                >{{ product.name }}</a
+                                            >
                                         </h4>
                                         <p class="product-excerpt">
-                                            description
+                                            {{ product.description }}
                                         </p>
-                                        <div
-                                            class="product-bottom-details d-flex justify-content-between"
-                                        >
-                                            <div class="product-price">
-                                                $160
-                                            </div>
-                                            <div class="product-links">
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-outline-secondary add-to-cart"
-                                                    ><i
-                                                        class="fas fa-shopping-cart"
-                                                    ></i
-                                                ></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                                <div class="product-card">
-                                    <div class="product-thumb">
-                                        <a href="/product"
-                                            ><img
-                                                src="static/images/p6.jpg"
-                                                alt=""
-                                        /></a>
-                                    </div>
-                                    <div class="product-details">
-                                        <h4>
-                                            <a href="/product">Product 2</a>
-                                        </h4>
-                                        <p class="product-excerpt">
-                                            description
-                                        </p>
-                                        <div
-                                            class="product-bottom-details d-flex justify-content-between"
-                                        >
-                                            <div class="product-price">
-                                                $150
+                                        <div class="product-sizes">
+                                            {% for size in product.sizes %}
+                                            <div
+                                                class="product-size {% if not size.available %}unavailable{% endif %}"
+                                            >
+                                                {{ size.size }}
                                             </div>
-                                            <div class="product-links">
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-outline-secondary add-to-cart"
-                                                    ><i
-                                                        class="fas fa-shopping-cart"
-                                                    ></i
-                                                ></a>
-                                            </div>
+                                            {% endfor %}
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                                <div class="product-card">
-                                    <div class="product-thumb">
-                                        <a href="/product"
-                                            ><img
-                                                src="static/images/p7.jpg"
-                                                alt=""
-                                        /></a>
-                                    </div>
-                                    <div class="product-details">
-                                        <h4>
-                                            <a href="/product">Product 3</a>
-                                        </h4>
-                                        <p class="product-excerpt">
-                                            description
-                                        </p>
                                         <div
                                             class="product-bottom-details d-flex justify-content-between"
                                         >
                                             <div class="product-price">
-                                                $120
+                                                ${{ product.price }}
                                             </div>
-                                            <div class="product-links">
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-outline-secondary add-to-cart"
-                                                    ><i
-                                                        class="fas fa-shopping-cart"
-                                                    ></i
-                                                ></a>
+                                            <div class="product-card">
+                                                <div class="product-links">
+                                                    <form
+                                                        action="{{ url_for('views.add_to_favorites') }}"
+                                                        method="POST"
+                                                    >
+                                                        <input
+                                                            type="hidden"
+                                                            name="product_id"
+                                                            value="{{ product.id }}"
+                                                        />
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-outline-danger add-to-favorites"
+                                                        >
+                                                            <i
+                                                                class="fa-solid fa-heart"
+                                                            ></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="product-card">
+                                                <div class="product-links">
+                                                    <a
+                                                        href="/add-to-cart?product_id={{ product.id }}"
+                                                        class="btn btn-outline-success add-to-cart"
+                                                        ><i
+                                                            class="fas fa-shopping-cart"
+                                                        ></i
+                                                    ></a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                                <div class="product-card">
-                                    <div class="product-thumb">
-                                        <a href="/product"
-                                            ><img
-                                                src="static/images/p1.jpg"
-                                                alt=""
-                                        /></a>
-                                    </div>
-                                    <div class="product-details">
-                                        <h4>
-                                            <a href="/product">Product 4</a>
-                                        </h4>
-                                        <p class="product-excerpt">
-                                            description
-                                        </p>
-                                        <div
-                                            class="product-bottom-details d-flex justify-content-between"
-                                        >
-                                            <div class="product-price">
-                                                $120
-                                            </div>
-                                            <div class="product-links">
-                                                <a
-                                                    href="#"
-                                                    class="btn btn-outline-secondary add-to-cart"
-                                                    ><i
-                                                        class="fas fa-shopping-cart"
-                                                    ></i
-                                                ></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </section>
@@ -1025,7 +960,7 @@
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"
         ></script>
-        <script src="assets/owlcarousel/owl.carousel.min.js"></script>
+        <script src="static/owlcarousel/dist/assets/owl.carousel.min.js"></script>
         <script
             type="text/javascript"
             src="{{ url_for('static', filename='main.js') }}"
