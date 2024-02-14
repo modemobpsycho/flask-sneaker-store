@@ -44,25 +44,33 @@ def order():
     return render_template("order.html", user=current_user)
 
 
-@views.route("/product")
-@login_required
-def product_page():
-    products = Product.query.all()
-    sizes = Size.query.all()
-    return render_template(
-        "product.html", products=products, sizes=sizes, user=current_user
-    )
-
-
 @views.route("/checkout")
 @login_required
 def checkout():
     return render_template("checkout.html", user=current_user)
 
 
-@views.route("/category")
-def category():
-    return render_template("category.html", user=current_user)
+@views.route("/product")
+@login_required
+def product_page():
+    category = None
+    products = Product.query.all()
+    sizes = Size.query.all()
+    return render_template(
+        "product.html",
+        products=products,
+        sizes=sizes,
+        user=current_user,
+        category=category,
+    )
+
+
+@views.route("/product/<category>", methods=["GET"])
+def category(category):
+    products = Product.query.filter_by(category=category).all()
+    return render_template(
+        "product.html", products=products, category=category, user=current_user
+    )
 
 
 @views.route("/search", methods=["GET", "POST"])

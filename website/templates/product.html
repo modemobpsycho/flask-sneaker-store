@@ -5,7 +5,11 @@ hide_advantages %} {% endblock %} {% block main %}
         <div class="row mb-5">
             <div class="col-12 text-center">
                 <h2 class="section-title">
-                    <span style="padding-left: 1rem"> Sneakers </span>
+                    {% if category %}
+                    <span style="padding-left: 1rem">{{category}}</span>
+                    {% else %}
+                    <span style="padding-left: 1rem">All our products</span>
+                    {% endif %}
                 </h2>
             </div>
         </div>
