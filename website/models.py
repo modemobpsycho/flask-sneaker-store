@@ -19,6 +19,7 @@ class Product(db.Model):
     description = db.Column(db.String(500))
     price = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(200))
+    category = db.Column(db.String(100))
 
     sizes = db.relationship("Size", backref="product", cascade="all, delete-orphan")
 

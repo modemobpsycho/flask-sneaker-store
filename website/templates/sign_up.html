@@ -1,6 +1,4 @@
-{% extends "base.html" %} 
-
-{% block main %}
+{% extends "base.html" %} {% block main %}
 
 <style>
     .container {
@@ -12,8 +10,8 @@
 
     .form-wrapper {
         max-width: 500px;
-        width: 80%; 
-        margin: 0 auto; 
+        width: 80%;
+        margin: 0 auto;
         padding: 50px;
     }
 
@@ -40,58 +38,56 @@
 
 <div class="container">
     <div class="form-wrapper">
-		<form method="POST">
-			<h3 align="center">Sign Up</h3>
-			<div class="form-group">
-				<label for="email">Email Address</label>
-				<input
-					type="email"
-					class="form-control"
-					id="email"
-					name="email"
-					placeholder="Enter email"
-				/>
-			</div>
-			<div class="form-group">
-				<label for="firstName">First Name</label>
-				<input
-					type="text"
-					class="form-control"
-					id="firstName"
-					name="firstName"
-					placeholder="Enter first name"
-				/>
-			</div>
-			<div class="form-group">
-				<label for="password1">Password</label>
-				<input
-					type="password"
-					class="form-control"
-					id="password1"
-					name="password1"
-					placeholder="Enter password"
-				/>
-			</div>
-			<div class="form-group">
-				<label for="password2">Password (Confirm)</label>
-				<input
-					type="password"
-					class="form-control"
-					id="password2"
-					name="password2"
-					placeholder="Confirm password"
-				/>
-			</div>
-			<br />
-			<div class="button-wrapper">
-				<button type="submit" class="btn btn-primary">Submit</button>
-			</div>
-		</form>
+        <form method="POST">
+            <h3 align="center">Sign Up</h3>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email"
+                />
+            </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="Enter first name"
+                />
+            </div>
+            <div class="form-group">
+                <label for="password1">Password</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password1"
+                    name="password1"
+                    placeholder="Enter password"
+                />
+            </div>
+            <div class="form-group">
+                <label for="password2">Password (Confirm)</label>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="password2"
+                    name="password2"
+                    placeholder="Confirm password"
+                />
+            </div>
+            <br />
+            <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
     </div>
 </div>
-<br>
+<br />
 
-{% endblock%}
-
-{% block hide_main %}
-{% endblock %}
+{% endblock%} {% block hide_main %} {% endblock %} {% block fav_cart %} {%
+endblock %}

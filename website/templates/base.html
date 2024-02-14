@@ -1,567 +1,1034 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Sneakers House</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-		<link rel="stylesheet" href="static/owlcarousel/owl.carousel.min.css">
-		<link rel="stylesheet" href="static/owlcarousel/owl.theme.default.min.css">
-		<link rel="stylesheet" href="static/css/styles.css">
-		<link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon">
-		
-	</head>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sneakers House</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <link rel="stylesheet" href="static/owlcarousel/owl.carousel.min.css" />
+        <link
+            rel="stylesheet"
+            href="static/owlcarousel/owl.theme.default.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='/css/styles.css') }}"
+        />
+        <link
+            rel="shortcut icon"
+            href="{{ url_for('static', filename='/images/favicon.ico') }}"
+            type="image/x-icon"
+        />
+    </head>
 
-	<body>
-		<div class="wrapper">
-			<header class="header">
-				<div class="header-top py-1">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-6 col-sm-4">
-								<div class="header-top-phone d-flex align-items-center h-100">
-									<i class="fa-solid fa-mobile-screen"></i>
-									<a href="tel:+1234567890" class="ms-2">123-456-7890</a>
-								</div>
-							</div>
-							<div class="col-sm-4 d-none d-sm-block">
-								<ul class="social-icons d-flex justify-content-center">
-									<li>
-										<a href="https://www.youtube.com/" target="_blank">
-											<i class="fa-brands fa-youtube"></i>
-										</a>
-									</li>
-									<li>
-										<a href="https://ru-ru.facebook.com/" target="_blank">
-											<i class="fa-brands fa-facebook-f"></i>
-										</a>
-									</li>
-									<li>
-										<a href="https://www.instagram.com/" target="_blank">
-											<i class="fa-brands fa-instagram"></i>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="col-6 col-sm-4">
-								<div class="header-top-account d-flex justify-content-end">
-									<div class="btn-group me-2">
-										<div class = "user_name">
-											{% if current_user.is_authenticated %}
-    											<span class="user-name">Hi, {{current_user.first_name }}</span>
-											{% endif %}
-										</div>
-										<div class="dropdown">
-											<button class="btn btn-sm dropdown-toggle" type="button"
-												data-bs-toggle="dropdown" aria-expanded="false">
-												Account
-											</button>
-											<ul class="dropdown-menu">
-												<li>
-													<a class="dropdown-item" href="{{ url_for('auth.login') }}">Login</a>
-												</li>
-												<li>
-													<a class="dropdown-item" href="{{ url_for('auth.sign_up') }}">Sign Up</a>
-												</li>
-												<li>
-													<a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-	
-									<div class="btn-group">
-										<div class="dropdown">
-											<button class="btn btn-sm dropdown-toggle" type="button"
-												data-bs-toggle="dropdown" aria-expanded="false">
-												EN
-											</button>
-											<ul class="dropdown-menu">
-												<li>
-													<a class="dropdown-item" href="#">RU</a>
-												</li>
-												<li>
-													<a class="dropdown-item" href="#">DE</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="header-middle bg-white py-4">
-					<div class="container-fluid">
-						<div class="row align-items-center">
-	
-							<div class="col-sm-6">
-								
-								<a href="/" class="header-logo h1">Sneakers House</a>
-							</div>
-	
-							<div class="col-sm-6 mt-2 mt-md-0">
-								<form action="">
-									<div class="input-group">
-										<input type="text" class="form-control" name="s" placeholder="Searching..."
-											aria-label="Searching..." aria-describedby="button-search">
-										<button class="btn btn-outline-info" type="submit" id="button-search">
-											<i class="fa-solid fa-magnifying-glass"></i>
-										</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-	
-				</div>
-			</header>
-			<div class="header-bottom sticky-top" id="header-nav">
-				<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-					<div class="container-fluid">
-						<button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-							data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-expanded="false"
-							aria-label="Toggle navigation">
-							<span class="navbar-toggler-icon"></span>
-						</button>
-						<div class="offcanvas offcanvas-start" id="offcanvasNavbar" tabindex="-1"
-							aria-labelledby="offcanvasNavbarLabel">
-							<div class="offcanvas-header">
-								<h5 class="offcanvas-title" id="offcanvasNavbarLabel">Catalog</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-									aria-label="Close"></button>
-							</div>
-							<div class="offcanvas-body">
-								{% if user.is_authenticated %}
-								<ul class="navbar-nav">
-									<li class="nav-item">
-										<a class="nav-link active" aria-current="page" href="/">Home</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#about">About</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#contacts">Contact</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="/order">Payment</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="/checkout">Delivery</a>
-									</li>
-									<li class="nav-item dropdown">
-										<a class="nav-link dropdown-toggle" href="/product" role="button" data-bs-toggle="dropdown"
-											aria-expanded="false" data-bs-auto-close="outside">
-											Catalog
-										</a>
-										<ul class="dropdown-menu dropdown-menu-end">
-											<li>
-												<a class="dropdown-item" href="/product">Shoes</a>
-											</li>
-											<li>
-												<a class="dropdown-item" href="/product">Socks</a>
-											</li>
-											<li>
-												<a class="dropdown-item" href="/product">Care products</a>
-											</li>
-										</ul>
-									</li>
-								</ul>
-								{% else %}
-								<ul class="navbar-nav">
-									<li class="nav-item">
-										<a class="nav-link active" aria-current="page" href="/login">Login</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="/sign-up">Sign Up</a>
-									</li>
-									<li class="nav-item dropdown">
-										<a class="nav-link dropdown-toggle" href="/product" role="button" data-bs-toggle="dropdown"
-											aria-expanded="false" data-bs-auto-close="outside">
-											Catalog
-										</a>
-										<ul class="dropdown-menu dropdown-menu-end">
-											<li>
-												<a class="dropdown-item" href= "/product">Shoes</a>
-											</li>
-											<li>
-												<a class="dropdown-item" href="/product">Socks</a>
-											</li>
-											<li>
-												<a class="dropdown-item" href="/product">Care products</a>
-											</li>
-										</ul>
-									</li>
-								</ul>
-								{% endif %}
-							</div>
-						</div>
-	
-						<div>
-							<a href="{{ url_for('views.cart') }}" class="btn p-1">
-								<i class="fa-solid fa-heart"></i>
-							</a>
-	
-							<button class="btn p-1" id="cart-open" type="button" data-bs-toggle="offcanvas2"
-								data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
-								<i class="fa-solid fa-cart-shopping"></i>
-							</button>
-						</div>
-	
-					</div>
-				</nav>
-				
-			</div>
-			<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
-				<div class="offcanvas-header">
-					<h5 class="offcanvas-title" id="offcanvasCartLabel">Cart</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-				</div>
-				<div class="offcanvas-body">
-					<div class="table-responsive">
-						<table class="table offcanvasCart-table">
-							<tfoot>
-								<tr>
-									<td colspan="4" class="text-end">Total:</td>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-					<div class="text-end mt-3">
-						<a href="{{ url_for('views.cart') }}" class="btn btn-outline-warning">Cart</a>
-						<a href="{{ url_for('views.checkout') }}" class="btn btn-outline-secondary">Checkout</a>
-					</div>
-	
-					<div class="dropdown mt-3">
-						<button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-							More
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-								<a class="dropdown-item closecart" href="#footer" data-href="footer">Contacts</a>
-							</li>
-							<li>
-								<a class="dropdown-item closecart" href="#about" data-href="about">About us</a>
-							</li>
-							<li>
-								<a class="dropdown-item closecart" href="#map" data-href="map">Where are we?</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			{% block main %}
-			<main class="main">
-				{% block hide_carousel %}
-				<div id="carousel" class="carousel slide carousel-fade" >
-					<div class="carousel-indicators">
-						<button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active"
-							aria-current="true" aria-label="Slide 1"></button>
-						<button type="button" data-bs-target="#carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-						<button type="button" data-bs-target="#carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-						<button type="button" data-bs-target="#carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
-						<button type="button" data-bs-target="#carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
-					</div>
-					<div class="carousel-inner">
-						<div class="carousel-item active">
-							<img src="static/images/1.jpg" class="d-block w-100" alt="...">
-							<div class="carousel-caption d-none d-md-block">
-								<h2>Run for your life!</h2>
-								<p>“If it doesn’t challenge you, it won’t change you.” – Fred DeVito</p>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<img src="static/images/2.jpg" class="d-block w-100" alt="...">
-							<div class="carousel-caption d-none d-md-block">
-								<h2>Second slide label</h2>
-								<p>“Don’t dream of winning, train for it!” — Mo Fara</p>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<img src="static/images/3.jpg" class="d-block w-100" alt="...">
-							<div class="carousel-caption d-none d-md-block">
-								<h2>Third slide label</h2>
-								<p>“You must do the thing you think you cannot do.” — Eleanor Roosevelt</p>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<img src="static/images/4.jpg" class="d-block w-100" alt="...">
-							<div class="carousel-caption d-none d-md-block">
-								<h2>Fourth slide label</h2>
-								<p>“You either know fashion or you don’t.” — Anna Wintour</p>
-							</div>
-						</div>
-						<div class="carousel-item">
-							<img src="static/images/5.jpg" class="d-block w-100" alt="...">
-							<div class="carousel-caption d-none d-md-block">
-								<h2>Fifth slide label</h2>
-								<p>“Dressing well is a form of good manners.” — Tom Ford</p>
-							</div>
-						</div>
-					</div>
-					<button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Previous</span>
-					</button>
-					<button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Next</span>
-					</button>
-				</div>
-				{% endblock hide_carousel %}
-				{% block hide_advantages %}
-				<section class="advantages">
-					<div class="container-fluid">
-						<div class="row mb-5">
-							<div class="col-12">
-								<h2 class="section-title">
-									<span>Our advantages</span>
-								</h2>
-							</div>
-						</div>
-	
-						<div class="row gy-3 items">
-							<div class="col-lg-3 col-sm-6">
-								<div class="item">
-									<p>
-										<i class="fas fa-shipping-fast"></i>
-									</p>
-									<p>Direct deliveries from brand manufacturers</p>
-								</div>
-							</div>
-	
-							<div class="col-lg-3 col-sm-6">
-								<div class="item">
-									<p>
-										<i class="fas fa-cubes"></i>
-									</p>
-									<p>A wide range of products</p>
-								</div>
-							</div>
-	
-							<div class="col-lg-3 col-sm-6">
-								<div class="item">
-									<p>
-										<i class="fas fa-hand-holding-usd"></i>
-									</p>
-									<p>Pleasant and competitive prices</p>
-								</div>
-							</div>
-	
-							<div class="col-lg-3 col-sm-6">
-								<div class="item">
-									<p>
-										<i class="fa-solid fa-user-graduate"></i>
-									</p>
-									<p>Consultations from professionals</p>
-								</div>
-							</div>
-						</div>
-	
-					</div>
-				</section>
-				{% endblock hide_advantages %}
-				{% block hide_products %}
-				<section class="featured-products">
-					<div class="container-fluid">
-						<div class="row mb-5">
-							<div class="col-12">
-								<h2 class="section-title">
-									<span>Recommended products</span>
-								</h2>
-							</div>
-						</div>
-	
-						<div class="row">
-							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-								<div class="product-card">
-									<div class="product-thumb">
-										<a href="/product"><img src="static/images/p5.jpg" alt=""></a>
-									</div>
-									<div class="product-details">
-										<h4>
-											<a href="/product">Product 1</a>
-										</h4>
-										<p class="product-excerpt">description</p>
-										<div class="product-bottom-details d-flex justify-content-between">
-											<div class="product-price">
-												$160
-											</div>
-											<div class="product-links">
-												<a href="#" class="btn btn-outline-secondary add-to-cart"><i
-														class="fas fa-shopping-cart"></i></a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-	
-							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-								<div class="product-card">
-									<div class="product-thumb">
-										<a href="/product"><img src="static/images/p6.jpg" alt=""></a>
-									</div>
-									<div class="product-details">
-										<h4>
-											<a href="/product">Product 2</a>
-										</h4>
-										<p class="product-excerpt">description</p>
-										<div class="product-bottom-details d-flex justify-content-between">
-											<div class="product-price">
-												$150
-											</div>
-											<div class="product-links">
-												<a href="#" class="btn btn-outline-secondary add-to-cart"><i
-														class="fas fa-shopping-cart"></i></a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-	
-							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-								<div class="product-card">
-									<div class="product-thumb">
-										<a href="/product"><img src="static/images/p7.jpg" alt=""></a>
-									</div>
-									<div class="product-details">
-										<h4>
-											<a href="/product">Product 3</a>
-										</h4>
-										<p class="product-excerpt">description</p>
-										<div class="product-bottom-details d-flex justify-content-between">
-											<div class="product-price">
-												$120
-											</div>
-											<div class="product-links">
-												<a href="#" class="btn btn-outline-secondary add-to-cart"><i
-														class="fas fa-shopping-cart"></i></a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-								<div class="product-card">
-									<div class="product-thumb">
-										<a href="/product"><img src="static/images/p1.jpg" alt=""></a>
-									</div>
-									<div class="product-details">
-										<h4>
-											<a href="/product">Product 4</a>
-										</h4>
-										<p class="product-excerpt">description</p>
-										<div class="product-bottom-details d-flex justify-content-between">
-											<div class="product-price">
-												$120
-											</div>
-											<div class="product-links">
-												<a href="#" class="btn btn-outline-secondary add-to-cart"><i
-														class="fas fa-shopping-cart"></i></a>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-				{% endblock hide_products %}
-				{% block about_us %}
-				<section class="about-us" id="about">
-					<div class="container fluid">
-						<div class="row mb-5">
-							<div class="col-12">
-								<h2 class="section-title">
-									<span>About Us</span>
-								</h2>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<p>Welcome to Sneakers House - your source for stylish and high-quality sneakers!</p>
-								<p>We curate the best models from top brands to cater to your unique style.</p>
-								<p>Our team of sneaker enthusiasts is here to provide excellent service and help you find the perfect pair.</p>
-								<p>Join our Sneakers House family and discover the confidence and style that come with our fashionable sneakers!</p>
-							</div>
-						</div>
-					</div>
-				</section>
-				{% endblock about_us%}
-				{% block map %}
-				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1115.8614259378976!2d14.422333221701901!3d50.088602202709126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94e99076ea67%3A0x6cf45fa185ee1f6!2zTWFzbsOhIDYxOC8yYSwgMTEwIDAwIFN0YXLDqSBNxJtzdG8sINCn0LXRhdC40Y8!5e0!3m2!1sru!2sby!4v1707475724496!5m2!1sru!2sby" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" id="map"></iframe>
-				{% endblock map %}
-			{% endblock main %}
-			</main>
-			<footer class="footer" id="footer">
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-3 col-6">
-							<h4>Information</h4>
-							<ul class="list-unstyled">
-								<li><a href="/">Home</a></li>
-								<li><a href="#">Payment</a></li>
-								<li><a href="#">Delivery</a></li>
-								<li><a href="#">Contacts</a></li>
-							</ul>
-						</div>
-	
-						<div class="col-md-3 col-6">
-							<h4>Working hours</h4>
-							<ul class="list-unstyled">
-								<li>Czech, Masná 618/2a</li>
-								<li>mon-fri: 9:00 - 18:00</li>
-							</ul>
-						</div>
-	
-						<div class="col-md-3 col-6" id="contacts">
-							<h4>Contacts</h4>
-							<ul class="list-unstyled">
-								<li><a href="tel:1234567890">123-456-7890</a></li>
-								<li><a href="tel:0987654321">098-765-4321</a></li>
-							</ul>
-						</div>
-	
-						<div class="col-md-3 col-6">
-							<h4>Follow us</h4>
-							<ul class="footer-icons">
-								<li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
-								<li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
-								<li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
-		<script
-			src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-			integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-			integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-			integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-			crossorigin="anonymous"
-		></script>
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-			crossorigin="anonymous"
-		></script>
-		<script
-			type="text/javascript"
-			src="{{ url_for('static', filename='main.js') }}"
-		></script>
-		<script src="static/owlcarousel/owl.carousel.min.js"></script>
-	</body>
+    <body>
+        <div class="wrapper">
+            <header class="header">
+                <div class="header-top py-1">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-6 col-sm-4">
+                                <div
+                                    class="header-top-phone d-flex align-items-center h-100"
+                                >
+                                    <i class="fa-solid fa-mobile-screen"></i>
+                                    <a href="tel:+1234567890" class="ms-2"
+                                        >123-456-7890</a
+                                    >
+                                </div>
+                            </div>
+                            <div class="col-sm-4 d-none d-sm-block">
+                                <ul
+                                    class="social-icons d-flex justify-content-center"
+                                >
+                                    <li>
+                                        <a
+                                            href="https://www.youtube.com/"
+                                            target="_blank"
+                                        >
+                                            <i class="fa-brands fa-youtube"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="https://ru-ru.facebook.com/"
+                                            target="_blank"
+                                        >
+                                            <i
+                                                class="fa-brands fa-facebook-f"
+                                            ></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="https://www.instagram.com/"
+                                            target="_blank"
+                                        >
+                                            <i
+                                                class="fa-brands fa-instagram"
+                                            ></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6 col-sm-4">
+                                <div
+                                    class="header-top-account d-flex justify-content-end"
+                                >
+                                    <div class="btn-group me-2">
+                                        <div class="user_name">
+                                            {% if current_user.is_authenticated
+                                            %}
+                                            <span class="user-name"
+                                                >Hi, {{current_user.first_name
+                                                }}</span
+                                            >
+                                            {% endif %}
+                                        </div>
+                                        <div class="dropdown">
+                                            <button
+                                                class="btn btn-sm dropdown-toggle"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                Account
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{{ url_for('auth.login') }}"
+                                                        >Login</a
+                                                    >
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{{ url_for('auth.sign_up') }}"
+                                                        >Sign Up</a
+                                                    >
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="{{ url_for('auth.logout') }}"
+                                                        >Logout</a
+                                                    >
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="btn-group">
+                                        <div class="dropdown">
+                                            <button
+                                                class="btn btn-sm dropdown-toggle"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                EN
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="#"
+                                                        >RU</a
+                                                    >
+                                                </li>
+                                                <li>
+                                                    <a
+                                                        class="dropdown-item"
+                                                        href="#"
+                                                        >DE</a
+                                                    >
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-middle bg-white py-4">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <a href="/" class="header-logo h1"
+                                    >Sneakers House</a
+                                >
+                            </div>
+                            <div class="col-sm-6 mt-2 mt-md-0">
+                                {% if current_user.is_authenticated %}
+                                <form action="/search" method="GET">
+                                    <div class="input-group">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="search_query"
+                                            placeholder="Searching..."
+                                            aria-label="Searching..."
+                                            aria-describedby="button-search"
+                                        />
+                                        <button
+                                            class="btn btn-outline-info"
+                                            type="submit"
+                                            id="button-search"
+                                        >
+                                            <i
+                                                class="fa-solid fa-magnifying-glass"
+                                            ></i>
+                                        </button>
+                                    </div>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="header-bottom sticky-top" id="header-nav">
+                <nav
+                    class="navbar navbar-expand-lg bg-dark"
+                    data-bs-theme="dark"
+                >
+                    <div class="container-fluid">
+                        <button
+                            class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasNavbar"
+                            aria-controls="offcanvasNavbar"
+                            aria-expanded="false"
+                            aria-label="Toggle navigation"
+                        >
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div
+                            class="offcanvas offcanvas-start"
+                            id="offcanvasNavbar"
+                            tabindex="-1"
+                            aria-labelledby="offcanvasNavbarLabel"
+                        >
+                            <div class="offcanvas-header">
+                                <h5
+                                    class="offcanvas-title"
+                                    id="offcanvasNavbarLabel"
+                                >
+                                    Catalog
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="offcanvas"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                {% if user.is_authenticated %}
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a
+                                            class="nav-link active"
+                                            aria-current="page"
+                                            href="/"
+                                            >Home</a
+                                        >
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#about"
+                                            >About</a
+                                        >
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#contacts"
+                                            >Contact</a
+                                        >
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/order"
+                                            >Payment</a
+                                        >
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/checkout"
+                                            >Delivery</a
+                                        >
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a
+                                            class="nav-link dropdown-toggle"
+                                            href="/product"
+                                            role="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                            data-bs-auto-close="outside"
+                                        >
+                                            Catalog
+                                        </a>
+                                        <ul
+                                            class="dropdown-menu dropdown-menu-end"
+                                        >
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/product"
+                                                    >All products</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{{ url_for('views.category', category='shoes') }}"
+                                                    >Shoes</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{{ url_for('views.category', category='socks') }}"
+                                                    >Socks</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="{{ url_for('views.category', category='care') }}"
+                                                    >Care products</a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                {% else %}
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a
+                                            class="nav-link active"
+                                            aria-current="page"
+                                            href="/login"
+                                            >Login</a
+                                        >
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/sign-up"
+                                            >Sign Up</a
+                                        >
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a
+                                            class="nav-link dropdown-toggle"
+                                            href="/product"
+                                            role="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                            data-bs-auto-close="outside"
+                                        >
+                                            Catalog
+                                        </a>
+                                        <ul
+                                            class="dropdown-menu dropdown-menu-end"
+                                        >
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/product"
+                                                    >All products</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/product"
+                                                    >Shoes</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/product"
+                                                    >Socks</a
+                                                >
+                                            </li>
+                                            <li>
+                                                <a
+                                                    class="dropdown-item"
+                                                    href="/product"
+                                                    >Care products</a
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div>
+                            {% block fav_cart%}
+                            <a
+                                href="{{ url_for('views.favorites') }}"
+                                class="btn p-1"
+                            >
+                                <i class="fa-solid fa-heart"></i>
+                                <span
+                                    class="badge text-bg-warning cart-badge bg-info rounded-circle"
+                                    >{{ session.get('user_favorites_count', 0)
+                                    }}</span
+                                >
+                            </a>
+
+                            <button
+                                class="btn p-1"
+                                id="cart-open"
+                                type="button"
+                                data-bs-toggle="offcanvas2"
+                                data-bs-target="#offcanvasCart"
+                                aria-controls="offcanvasCart"
+                            >
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span
+                                    class="badge text-bg-warning cart-badge bg-info rounded-circle"
+                                    >5</span
+                                >
+                            </button>
+                            {% endblock fav_cart %}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div
+                class="offcanvas offcanvas-end"
+                tabindex="-1"
+                id="offcanvasCart"
+                aria-labelledby="offcanvasCartLabel"
+            >
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasCartLabel">
+                        Cart
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="table-responsive">
+                        <table class="table offcanvasCart-table">
+                            <tbody>
+                                <tr>
+                                    <td class="product-img-td">
+                                        <a href="#"
+                                            ><img
+                                                src="assets/img/products/1.jpg"
+                                                alt=""
+                                        /></a>
+                                    </td>
+                                    <td>
+                                        <a href="#"
+                                            >Product 1 Lorem ipsum dolor, sit
+                                            amet consectetur adipisicing.</a
+                                        >
+                                    </td>
+                                    <td>$65</td>
+                                    <td>&times;1</td>
+                                    <td>
+                                        <button class="btn btn-danger">
+                                            <i
+                                                class="fa-regular fa-circle-xmark"
+                                            ></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="product-img-td">
+                                        <a href="#"
+                                            ><img
+                                                src="assets/img/products/2.jpg"
+                                                alt=""
+                                        /></a>
+                                    </td>
+                                    <td><a href="#">Product 2</a></td>
+                                    <td>$80</td>
+                                    <td>&times;2</td>
+                                    <td>
+                                        <button class="btn btn-danger">
+                                            <i
+                                                class="fa-regular fa-circle-xmark"
+                                            ></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="product-img-td">
+                                        <a href="#"
+                                            ><img
+                                                src="assets/img/products/3.jpg"
+                                                alt=""
+                                        /></a>
+                                    </td>
+                                    <td><a href="#">Product 3</a></td>
+                                    <td>$100</td>
+                                    <td>&times;1</td>
+                                    <td>
+                                        <button class="btn btn-danger">
+                                            <i
+                                                class="fa-regular fa-circle-xmark"
+                                            ></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end">Total:</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <a
+                            href="{{ url_for('views.cart') }}"
+                            class="btn btn-outline-warning"
+                            >Cart</a
+                        >
+                        <a
+                            href="{{ url_for('views.checkout') }}"
+                            class="btn btn-outline-secondary"
+                            >Checkout</a
+                        >
+                    </div>
+
+                    <div class="dropdown mt-3">
+                        <button
+                            class="btn btn-secondary dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                        >
+                            More
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a
+                                    class="dropdown-item closecart"
+                                    href="#footer"
+                                    data-href="footer"
+                                    >Contacts</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    class="dropdown-item closecart"
+                                    href="#about"
+                                    data-href="about"
+                                    >About us</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    class="dropdown-item closecart"
+                                    href="#map"
+                                    data-href="map"
+                                    >Where are we?</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% block main %}
+            <main class="main">
+                {% block hide_carousel %}
+                <div id="carousel" class="carousel slide carousel-fade">
+                    <div class="carousel-indicators">
+                        <button
+                            type="button"
+                            data-bs-target="#carousel"
+                            data-bs-slide-to="0"
+                            class="active"
+                            aria-current="true"
+                            aria-label="Slide 1"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carousel"
+                            data-bs-slide-to="1"
+                            aria-label="Slide 2"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carousel"
+                            data-bs-slide-to="2"
+                            aria-label="Slide 3"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carousel"
+                            data-bs-slide-to="3"
+                            aria-label="Slide 4"
+                        ></button>
+                        <button
+                            type="button"
+                            data-bs-target="#carousel"
+                            data-bs-slide-to="4"
+                            aria-label="Slide 5"
+                        ></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img
+                                src="static/images/1.jpg"
+                                class="d-block w-100"
+                                alt="..."
+                            />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Run for your life!</h2>
+                                <p>
+                                    “If it doesn’t challenge you, it won’t
+                                    change you.” – Fred DeVito
+                                </p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img
+                                src="static/images/2.jpg"
+                                class="d-block w-100"
+                                alt="..."
+                            />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Second slide label</h2>
+                                <p>
+                                    “Don’t dream of winning, train for it!” — Mo
+                                    Fara
+                                </p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img
+                                src="static/images/3.jpg"
+                                class="d-block w-100"
+                                alt="..."
+                            />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Third slide label</h2>
+                                <p>
+                                    “You must do the thing you think you cannot
+                                    do.” — Eleanor Roosevelt
+                                </p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img
+                                src="static/images/4.jpg"
+                                class="d-block w-100"
+                                alt="..."
+                            />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Fourth slide label</h2>
+                                <p>
+                                    “You either know fashion or you don’t.” —
+                                    Anna Wintour
+                                </p>
+                            </div>
+                        </div>
+                        <div class="carousel-item">
+                            <img
+                                src="static/images/5.jpg"
+                                class="d-block w-100"
+                                alt="..."
+                            />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h2>Fifth slide label</h2>
+                                <p>
+                                    “Dressing well is a form of good manners.” —
+                                    Tom Ford
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#carousel"
+                        data-bs-slide="prev"
+                    >
+                        <span
+                            class="carousel-control-prev-icon"
+                            aria-hidden="true"
+                        ></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button
+                        class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#carousel"
+                        data-bs-slide="next"
+                    >
+                        <span
+                            class="carousel-control-next-icon"
+                            aria-hidden="true"
+                        ></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                {% endblock hide_carousel %} {% block hide_advantages %}
+                <section class="advantages">
+                    <div class="container-fluid">
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h2 class="section-title">
+                                    <span>Our advantages</span>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="row gy-3 items">
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <p>
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </p>
+                                    <p>
+                                        Direct deliveries from brand
+                                        manufacturers
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <p>
+                                        <i class="fas fa-cubes"></i>
+                                    </p>
+                                    <p>A wide range of products</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <p>
+                                        <i class="fas fa-hand-holding-usd"></i>
+                                    </p>
+                                    <p>Pleasant and competitive prices</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-6">
+                                <div class="item">
+                                    <p>
+                                        <i
+                                            class="fa-solid fa-user-graduate"
+                                        ></i>
+                                    </p>
+                                    <p>Consultations from professionals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% endblock hide_advantages %} {% block hide_products %}
+                <section class="featured-products">
+                    <div class="container-fluid">
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h2 class="section-title">
+                                    <span>Recommended products</span>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <a href="/product"
+                                            ><img
+                                                src="static/images/p5.jpg"
+                                                alt=""
+                                        /></a>
+                                    </div>
+                                    <div class="product-details">
+                                        <h4>
+                                            <a href="/product">Product 1</a>
+                                        </h4>
+                                        <p class="product-excerpt">
+                                            description
+                                        </p>
+                                        <div
+                                            class="product-bottom-details d-flex justify-content-between"
+                                        >
+                                            <div class="product-price">
+                                                $160
+                                            </div>
+                                            <div class="product-links">
+                                                <a
+                                                    href="#"
+                                                    class="btn btn-outline-secondary add-to-cart"
+                                                    ><i
+                                                        class="fas fa-shopping-cart"
+                                                    ></i
+                                                ></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <a href="/product"
+                                            ><img
+                                                src="static/images/p6.jpg"
+                                                alt=""
+                                        /></a>
+                                    </div>
+                                    <div class="product-details">
+                                        <h4>
+                                            <a href="/product">Product 2</a>
+                                        </h4>
+                                        <p class="product-excerpt">
+                                            description
+                                        </p>
+                                        <div
+                                            class="product-bottom-details d-flex justify-content-between"
+                                        >
+                                            <div class="product-price">
+                                                $150
+                                            </div>
+                                            <div class="product-links">
+                                                <a
+                                                    href="#"
+                                                    class="btn btn-outline-secondary add-to-cart"
+                                                    ><i
+                                                        class="fas fa-shopping-cart"
+                                                    ></i
+                                                ></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <a href="/product"
+                                            ><img
+                                                src="static/images/p7.jpg"
+                                                alt=""
+                                        /></a>
+                                    </div>
+                                    <div class="product-details">
+                                        <h4>
+                                            <a href="/product">Product 3</a>
+                                        </h4>
+                                        <p class="product-excerpt">
+                                            description
+                                        </p>
+                                        <div
+                                            class="product-bottom-details d-flex justify-content-between"
+                                        >
+                                            <div class="product-price">
+                                                $120
+                                            </div>
+                                            <div class="product-links">
+                                                <a
+                                                    href="#"
+                                                    class="btn btn-outline-secondary add-to-cart"
+                                                    ><i
+                                                        class="fas fa-shopping-cart"
+                                                    ></i
+                                                ></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+                                <div class="product-card">
+                                    <div class="product-thumb">
+                                        <a href="/product"
+                                            ><img
+                                                src="static/images/p1.jpg"
+                                                alt=""
+                                        /></a>
+                                    </div>
+                                    <div class="product-details">
+                                        <h4>
+                                            <a href="/product">Product 4</a>
+                                        </h4>
+                                        <p class="product-excerpt">
+                                            description
+                                        </p>
+                                        <div
+                                            class="product-bottom-details d-flex justify-content-between"
+                                        >
+                                            <div class="product-price">
+                                                $120
+                                            </div>
+                                            <div class="product-links">
+                                                <a
+                                                    href="#"
+                                                    class="btn btn-outline-secondary add-to-cart"
+                                                    ><i
+                                                        class="fas fa-shopping-cart"
+                                                    ></i
+                                                ></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% endblock hide_products %} {% block about_us %}
+                <section class="about-us" id="about">
+                    <div class="container fluid">
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h2 class="section-title">
+                                    <span>About Us</span>
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>
+                                    Welcome to Sneakers House - your source for
+                                    stylish and high-quality sneakers!
+                                </p>
+                                <p>
+                                    We curate the best models from top brands to
+                                    cater to your unique style.
+                                </p>
+                                <p>
+                                    Our team of sneaker enthusiasts is here to
+                                    provide excellent service and help you find
+                                    the perfect pair.
+                                </p>
+                                <p>
+                                    Join our Sneakers House family and discover
+                                    the confidence and style that come with our
+                                    fashionable sneakers!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                {% endblock about_us%} {% block map %}
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1115.8614259378976!2d14.422333221701901!3d50.088602202709126!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94e99076ea67%3A0x6cf45fa185ee1f6!2zTWFzbsOhIDYxOC8yYSwgMTEwIDAwIFN0YXLDqSBNxJtzdG8sINCn0LXRhdC40Y8!5e0!3m2!1sru!2sby!4v1707475724496!5m2!1sru!2sby"
+                    width="100%"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    id="map"
+                ></iframe>
+                {% endblock map %} {% endblock main %}
+            </main>
+            <footer class="footer" id="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <h4>Information</h4>
+                            <ul class="list-unstyled">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="#">Payment</a></li>
+                                <li><a href="#">Delivery</a></li>
+                                <li><a href="#">Contacts</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <h4>Working hours</h4>
+                            <ul class="list-unstyled">
+                                <li>Czech, Masná 618/2a</li>
+                                <li>mon-fri: 9:00 - 18:00</li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-3 col-6" id="contacts">
+                            <h4>Contacts</h4>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <a href="tel:1234567890">123-456-7890</a>
+                                </li>
+                                <li>
+                                    <a href="tel:0987654321">098-765-4321</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <h4>Follow us</h4>
+                            <ul class="footer-icons">
+                                <li>
+                                    <a href="#"
+                                        ><i class="fa-brands fa-youtube"></i
+                                    ></a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        ><i class="fa-brands fa-facebook-f"></i
+                                    ></a>
+                                </li>
+                                <li>
+                                    <a href="#"
+                                        ><i class="fa-brands fa-instagram"></i
+                                    ></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <script
+            src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"
+        ></script>
+        <script src="assets/owlcarousel/owl.carousel.min.js"></script>
+        <script
+            type="text/javascript"
+            src="{{ url_for('static', filename='main.js') }}"
+        ></script>
+    </body>
 </html>
