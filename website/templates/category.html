@@ -35,7 +35,7 @@ hide_advantages %} {% endblock %} {% block main %}
                         </div>
 
                         <div
-                            class="product-bottom-details d-flex justify-content-between"
+                            class="product-bottom-details d-flex justify-content-between align-items-end"
                         >
                             <div class="product-price">
                                 ${{ product.price }}
@@ -59,14 +59,13 @@ hide_advantages %} {% endblock %} {% block main %}
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="product-card">
                                 <div class="product-links">
                                     <a
                                         href="/add-to-cart?product_id={{ product.id }}"
                                         class="btn btn-outline-success add-to-cart"
-                                        ><i class="fas fa-shopping-cart"></i
-                                    ></a>
+                                    >
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>

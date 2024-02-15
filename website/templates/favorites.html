@@ -40,37 +40,33 @@ hide_advantages %} {% endblock %} {% block main %}
                             <div class="product-price">
                                 ${{ product.price }}
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <form
-                                        action="{{ url_for('views.remove_from_favorites') }}"
-                                        method="POST"
+                            <div class="product-links">
+                                <form
+                                    action="{{ url_for('views.remove_from_favorites') }}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="{{ product.id }}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger remove_from_favorites"
                                     >
-                                        <input
-                                            type="hidden"
-                                            name="product_id"
-                                            value="{{ product.id }}"
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="btn btn-outline-danger remove_from_favorites"
-                                        >
-                                            <i
-                                                class="fa fa-times"
-                                                aria-hidden="true"
-                                            ></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                        <i
+                                            class="fa fa-times"
+                                            aria-hidden="true"
+                                        ></i>
+                                    </button>
+                                </form>
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <a
-                                        href="/add-to-cart?product_id={{ product.id }}"
-                                        class="btn btn-outline-success add-to-cart"
-                                        ><i class="fas fa-shopping-cart"></i
-                                    ></a>
-                                </div>
+                            <div class="product-links">
+                                <a
+                                    href="/add-to-cart?product_id={{ product.id }}"
+                                    class="btn btn-outline-success add-to-cart"
+                                    ><i class="fas fa-shopping-cart"></i
+                                ></a>
                             </div>
                         </div>
                     </div>

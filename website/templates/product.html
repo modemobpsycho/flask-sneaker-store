@@ -6,7 +6,7 @@ hide_advantages %} {% endblock %} {% block main %}
             <div class="col-12 text-center">
                 <h2 class="section-title">
                     {% if category %}
-                    <span style="padding-left: 1rem">{{category.name}}</span>
+                    <span style="padding-left: 1rem">{{category}}</span>
                     {% else %}
                     <span style="padding-left: 1rem">All our products</span>
                     {% endif %}
@@ -44,34 +44,30 @@ hide_advantages %} {% endblock %} {% block main %}
                             <div class="product-price">
                                 ${{ product.price }}
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <form
-                                        action="{{ url_for('views.add_to_favorites') }}"
-                                        method="POST"
+                            <div class="product-links">
+                                <form
+                                    action="{{ url_for('views.add_to_favorites') }}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="{{ product.id }}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger add-to-favorites"
                                     >
-                                        <input
-                                            type="hidden"
-                                            name="product_id"
-                                            value="{{ product.id }}"
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="btn btn-outline-danger add-to-favorites"
-                                        >
-                                            <i class="fa-solid fa-heart"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                        <i class="fa-solid fa-heart"></i>
+                                    </button>
+                                </form>
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <a
-                                        href="/add-to-cart?product_id={{ product.id }}"
-                                        class="btn btn-outline-success add-to-cart"
-                                        ><i class="fas fa-shopping-cart"></i
-                                    ></a>
-                                </div>
+                            <div class="product-links">
+                                <a
+                                    href="/add-to-cart?product_id={{ product.id }}"
+                                    class="btn btn-outline-success add-to-cart"
+                                    ><i class="fas fa-shopping-cart"></i
+                                ></a>
                             </div>
                         </div>
                     </div>

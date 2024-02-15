@@ -299,8 +299,9 @@ label.required::before {
 }
 
 .product-bottom-details {
+    gap: 10px;
     border-top: 1px solid var(--light-grey-color);
-    padding-top: 1rem;
+    padding-top: 8px;
 }
 
 .product-price {

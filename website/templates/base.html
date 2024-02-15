@@ -392,7 +392,7 @@
                                 <i class="fa-solid fa-heart"></i>
                                 <span
                                     class="badge text-bg-warning cart-badge bg-info rounded-circle"
-                                    >{{ session.get('user_favorites_count', 0)
+                                    >{{ session.get('favorites_count', 0)
                                     }}</span
                                 >
                             </a>
@@ -795,38 +795,34 @@
                                             <div class="product-price">
                                                 ${{ product.price }}
                                             </div>
-                                            <div class="product-card">
-                                                <div class="product-links">
-                                                    <form
-                                                        action="{{ url_for('views.add_to_favorites') }}"
-                                                        method="POST"
+                                            <div class="product-links">
+                                                <form
+                                                    action="{{ url_for('views.add_to_favorites') }}"
+                                                    method="POST"
+                                                >
+                                                    <input
+                                                        type="hidden"
+                                                        name="product_id"
+                                                        value="{{ product.id }}"
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-outline-danger add-to-favorites"
                                                     >
-                                                        <input
-                                                            type="hidden"
-                                                            name="product_id"
-                                                            value="{{ product.id }}"
-                                                        />
-                                                        <button
-                                                            type="submit"
-                                                            class="btn btn-outline-danger add-to-favorites"
-                                                        >
-                                                            <i
-                                                                class="fa-solid fa-heart"
-                                                            ></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
+                                                        <i
+                                                            class="fa-solid fa-heart"
+                                                        ></i>
+                                                    </button>
+                                                </form>
                                             </div>
-                                            <div class="product-card">
-                                                <div class="product-links">
-                                                    <a
-                                                        href="/add-to-cart?product_id={{ product.id }}"
-                                                        class="btn btn-outline-success add-to-cart"
-                                                        ><i
-                                                            class="fas fa-shopping-cart"
-                                                        ></i
-                                                    ></a>
-                                                </div>
+                                            <div class="product-links">
+                                                <a
+                                                    href="/add-to-cart?product_id={{ product.id }}"
+                                                    class="btn btn-outline-success add-to-cart"
+                                                    ><i
+                                                        class="fas fa-shopping-cart"
+                                                    ></i
+                                                ></a>
                                             </div>
                                         </div>
                                     </div>
