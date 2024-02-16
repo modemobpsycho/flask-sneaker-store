@@ -20,12 +20,16 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(200))
     category = db.Column(db.String(100))
+    requires_size = db.Column(db.Boolean, default=False)
 
     sizes = db.relationship("Size", backref="product", cascade="all, delete-orphan")
 
     favorites = db.relationship(
         "User", secondary="favorites", backref=db.backref("favorites", lazy="dynamic")
     )
+
+    def get_requires_size(self):
+        return self.requires_size
 
 
 class Size(db.Model):
@@ -72,6 +76,7 @@ class User(db.Model, UserMixin):
     favorite_products = db.relationship(
         "Product", secondary="favorites", backref=db.backref("users", lazy="dynamic")
     )
+    cart_items = db.relationship("CartItem", backref="user", lazy="dynamic")
 
     def add_to_favorites(self, product):
         if product not in self.favorite_products:
