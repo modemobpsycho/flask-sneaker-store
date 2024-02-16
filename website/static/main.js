@@ -19,6 +19,57 @@
     });
 })();
 
+document.addEventListener("DOMContentLoaded", function () {
+    var flashMessages = document.querySelectorAll(
+        ".flash-message[data-auto-dismiss]"
+    );
+
+    flashMessages.forEach(function (message) {
+        var duration = 3000;
+        setTimeout(function () {
+            message.style.display = "none";
+        }, duration);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    var flashModal = document.getElementById("flash-modal");
+    var flashModalMessage = document.querySelector(".flash-modal-message");
+    var flashModalBackground = document.createElement("div");
+    flashModalBackground.classList.add("flash-modal-background");
+
+    function showFlashModal(message) {
+        flashModalMessage.textContent = message;
+        flashModal.style.display = "block";
+        document.body.appendChild(flashModalBackground);
+        setTimeout(hideFlashModal, 3000);
+    }
+
+    function hideFlashModal() {
+        flashModal.style.display = "none";
+        flashModalBackground.remove();
+    }
+
+    function checkFlashDisplayed() {
+        return new Promise(function (resolve) {
+            var isFlashDisplayed = localStorage.getItem("flashDisplayed");
+            resolve(isFlashDisplayed === "true");
+        });
+    }
+
+    function setFlashDisplayed() {
+        localStorage.setItem("flashDisplayed", "true");
+    }
+
+    checkFlashDisplayed().then(function (isDisplayed) {
+        if (isDisplayed) {
+            showFlashModal();
+        } else {
+            setFlashDisplayed();
+        }
+    });
+});
+
 window.addEventListener("scroll", function () {
     document
         .getElementById("header-nav")

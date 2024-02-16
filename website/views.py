@@ -1,8 +1,17 @@
 import random
-from flask import Blueprint, flash, redirect, render_template, request, url_for, session
+from flask import (
+    Blueprint,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    url_for,
+    session,
+)
 from flask_login import login_required, current_user
 from sqlalchemy import func
-from .models import Favorites, Product, Size, UserFavoritesCount
+from .models import CartItem, Favorites, Product, Size, User, UserFavoritesCount
 from . import db
 
 views = Blueprint("views", __name__)
@@ -97,14 +106,6 @@ def search():
         return render_template("search.html", user=current_user)
 
 
-@views.route("/add-to-cart", methods=["GET"])
-@login_required
-def add_to_cart():
-    product_id = request.args.get("product_id")
-
-    return redirect(url_for("views.cart"))
-
-
 @views.route("/add-to-favorites", methods=["POST"])
 @login_required
 def add_to_favorites():
@@ -130,13 +131,17 @@ def add_to_favorites():
                 db.session.add(user_favorites_count)
 
             db.session.commit()
-
-            session["favorites_count"] = user_favorites_count.favorites_count
-
+            flash("Successfully added to your favorites!", "success")
         else:
-            flash("Product already exist!", "info")
+            flash("Product already exists!", "error")
     else:
         flash("Product is undefined!", "error")
+
+    session["favorites_count"] = (
+        UserFavoritesCount.query.filter_by(user_id=current_user.id)
+        .first()
+        .favorites_count
+    )
 
     return redirect(request.referrer or url_for("views.favorites"))
 
@@ -174,4 +179,79 @@ def remove_from_favorites():
     else:
         flash("Product is undefined!", "error")
 
-    return redirect(request.referrer or url_for("views.favorites"))
+    flash("Successfully remove from your favorites!", "success")
+
+    return redirect(request.referrer or url_for("views.favorites", user=current_user))
+
+
+@views.route("/add_to_cart", methods=["POST"])
+@login_required
+def add_to_cart():
+    product_id = request.form.get("product_id")
+    quantity = request.form.get("quantity")
+
+    user = User.query.get(current_user.id)
+
+    product = Product.query.get(product_id)
+    if not product:
+        flash("Product is undefined!", "error")
+
+    if product.get_requires_size() and (
+        not request.form.get("size_id") or request.form.get("size_id") == "None"
+    ):
+        flash("Please select a size", "error")
+    else:
+        flash("Successfully added to your shopping cart!", "success")
+
+    cart_item = CartItem.query.filter_by(
+        user_id=user.id, product_id=product_id, size_id=request.form.get("size_id")
+    ).first()
+
+    if cart_item:
+        if quantity is not None:
+            cart_item.quantity += int(quantity)
+        else:
+            cart_item.quantity += 1
+    else:
+        cart_item = CartItem.query.filter_by(
+            user_id=user.id,
+            product_id=product_id,
+            size_id=request.form.get("size_id"),
+        ).first()
+
+        if not cart_item:
+            cart_item = CartItem(
+                user_id=user.id,
+                product_id=product_id,
+                size_id=request.form.get("size_id"),
+                quantity=1,
+            )
+            db.session.add(cart_item)
+        else:
+            if quantity is not None:
+                cart_item.quantity += int(quantity)
+
+    db.session.commit()
+
+    return redirect(request.referrer or url_for("views.cart", user=current_user))
+
+
+@views.route("/remove_from_cart", methods=["POST"])
+@login_required
+def remove_from_cart():
+    product_id = request.form.get("product_id")
+    size_id = request.form.get("size_id")
+
+    user = User.query.get(current_user.id)
+
+    cart_item = CartItem.query.filter_by(
+        user_id=user.id, product_id=product_id, size_id=size_id
+    ).first()
+
+    if cart_item:
+        db.session.delete(cart_item)
+        db.session.commit()
+
+        return redirect(request.referrer or url_for("views.cart", user=current_user))
+    else:
+        return redirect(request.referrer or url_for("views.cart", user=current_user))

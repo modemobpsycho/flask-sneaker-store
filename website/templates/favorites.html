@@ -9,6 +9,35 @@ hide_advantages %} {% endblock %} {% block main %}
                 </h2>
             </div>
         </div>
+        <div id="flash-modal" class="flash-modal">
+            <div class="flash-modal-content">
+                <span class="flash-modal-message"></span>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %} {% for category, message in messages %} {% if
+                category == 'error' %}
+                <div
+                    class="alert alert-danger alter-dismissable fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {% else %}
+                <div
+                    class="alert alert-info alter-dismissable fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {% endif %} {% endfor %} {% endif %} {% endwith %}
+            </div>
+        </div>
         <div class="row">
             {% for product in user_favorites %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
@@ -24,15 +53,30 @@ hide_advantages %} {% endblock %} {% block main %}
                         </h4>
                         <p class="product-excerpt">{{ product.description }}</p>
 
-                        <div class="product-sizes">
-                            {% for size in product.sizes %}
-                            <div
-                                class="product-size {% if not size.available %}unavailable{% endif %}"
-                            >
-                                {{ size.size }}
+                        <form action="/add_to_cart" method="post">
+                            <input
+                                type="hidden"
+                                name="product_id"
+                                value="{{ product.id }}"
+                            />
+                            <div class="product-sizes">
+                                {% for size in product.sizes %} {% if
+                                size.available %}
+                                <button
+                                    type="submit"
+                                    class="product-size"
+                                    name="size_id"
+                                    value="{{ size.id }}"
+                                >
+                                    {{ size.size }}
+                                </button>
+                                {% else %}
+                                <div class="product-size unavailable">
+                                    {{ size.size }}
+                                </div>
+                                {% endif %} {% endfor %}
                             </div>
-                            {% endfor %}
-                        </div>
+                        </form>
 
                         <div
                             class="product-bottom-details d-flex justify-content-between"
@@ -58,15 +102,35 @@ hide_advantages %} {% endblock %} {% block main %}
                                             class="fa fa-times"
                                             aria-hidden="true"
                                         ></i>
+                                        DEL
                                     </button>
                                 </form>
                             </div>
                             <div class="product-links">
-                                <a
-                                    href="/add-to-cart?product_id={{ product.id }}"
-                                    class="btn btn-outline-success add-to-cart"
-                                    ><i class="fas fa-shopping-cart"></i
-                                ></a>
+                                <form
+                                    action="{{ url_for('views.add_to_cart') }}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="{{ product.id }}"
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="size_id"
+                                        id="selected-size"
+                                        value=""
+                                        required
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-success add-to-cart"
+                                    >
+                                        <i class="fas fa-shopping-cart"></i>
+                                        BUY
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

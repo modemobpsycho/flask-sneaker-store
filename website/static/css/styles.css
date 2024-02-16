@@ -360,6 +360,38 @@ footer a:hover {
     background-color: #fff;
 }
 
+.flash-modal {
+    position: fixed;
+    top: 90%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: none;
+}
+
+.flash-modal-content {
+    padding: 0px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.flash-modal-message {
+    font-size: 18px;
+    color: black;
+}
+
+.flash-modal-background {
+    position: fixed;
+    top: 3px;
+    left: 3px;
+    margin: 1px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    display: none;
+}
+
 @media only screen and (min-width: 992px) {
     .header-bottom .navbar .nav-link {
         padding: 1rem;
