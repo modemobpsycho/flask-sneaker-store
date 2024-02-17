@@ -11,7 +11,15 @@ from flask import (
 )
 from flask_login import login_required, current_user
 from sqlalchemy import func
-from .models import CartItem, Favorites, Product, Size, User, UserFavoritesCount
+from .models import (
+    CartItem,
+    Favorites,
+    Product,
+    Size,
+    User,
+    UserCartCount,
+    UserFavoritesCount,
+)
 from . import db
 
 views = Blueprint("views", __name__)
@@ -24,15 +32,50 @@ def home():
     random.shuffle(products)
     random_products = products[:4]
     sizes = Size.query.all()
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
     return render_template(
-        "base.html", user=current_user, products=random_products, sizes=sizes
+        "base.html",
+        user=current_user,
+        products=random_products,
+        sizes=sizes,
+        user_cart=user_cart,
     )
 
 
 @views.route("/cart")
 @login_required
 def cart():
-    return render_template("cart.html", user=current_user)
+    cart_count = current_user.get_cart_count()
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            size = Size.query.get(cart_item.size_id)
+            size_value = size.size if size else "0"
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "size": size_value,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
+
+    return render_template(
+        "cart.html", user_cart=user_cart, user=current_user, cart_count=cart_count
+    )
 
 
 @views.route("/favorites")
@@ -46,11 +89,25 @@ def favorites():
         product = Product.query.get(favorite.product_id)
         user_favorites.append(product)
 
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
+
     return render_template(
         "favorites.html",
         favorites_count=favorites_count,
         user_favorites=user_favorites,
         user=current_user,
+        user_cart=user_cart,
     )
 
 
@@ -72,20 +129,49 @@ def product_page():
     category = None
     products = Product.query.all()
     sizes = Size.query.all()
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
     return render_template(
         "product.html",
         products=products,
         sizes=sizes,
         user=current_user,
         category=category,
+        user_cart=user_cart,
     )
 
 
 @views.route("/product/<category>", methods=["GET"])
 def category(category):
     products = Product.query.filter_by(category=category).all()
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
     return render_template(
-        "product.html", products=products, category=category, user=current_user
+        "product.html",
+        products=products,
+        category=category,
+        user=current_user,
+        user_cart=user_cart,
     )
 
 
@@ -193,15 +279,25 @@ def add_to_cart():
     user = User.query.get(current_user.id)
 
     product = Product.query.get(product_id)
+
     if not product:
         flash("Product is undefined!", "error")
+        return redirect(request.referrer or url_for("views.cart", user=current_user))
 
     if product.get_requires_size() and (
         not request.form.get("size_id") or request.form.get("size_id") == "None"
     ):
         flash("Please select a size", "error")
+        return redirect(request.referrer or url_for("views.cart", user=current_user))
+
+    user_cart_count = UserCartCount.query.filter_by(user_id=current_user.id).first()
+    if user_cart_count:
+        user_cart_count.cart_count += 1
     else:
-        flash("Successfully added to your shopping cart!", "success")
+        user_cart_count = UserCartCount(user_id=current_user.id, cart_count=1)
+    db.session.add(user_cart_count)
+
+    flash("Successfully added to your shopping cart!", "success")
 
     cart_item = CartItem.query.filter_by(
         user_id=user.id, product_id=product_id, size_id=request.form.get("size_id")
@@ -213,45 +309,63 @@ def add_to_cart():
         else:
             cart_item.quantity += 1
     else:
-        cart_item = CartItem.query.filter_by(
+        cart_item = CartItem(
             user_id=user.id,
             product_id=product_id,
             size_id=request.form.get("size_id"),
-        ).first()
-
-        if not cart_item:
-            cart_item = CartItem(
-                user_id=user.id,
-                product_id=product_id,
-                size_id=request.form.get("size_id"),
-                quantity=1,
-            )
-            db.session.add(cart_item)
-        else:
-            if quantity is not None:
-                cart_item.quantity += int(quantity)
+            quantity=1,
+        )
+        db.session.add(cart_item)
 
     db.session.commit()
 
-    return redirect(request.referrer or url_for("views.cart", user=current_user))
+    cart_items = CartItem.query.filter_by(user_id=user.id).all()
+    total_price = sum(
+        Product.query.get(item.product_id).price * item.quantity for item in cart_items
+    )
+
+    session["cart_count"] = user_cart_count.cart_count
+    session["total_price"] = total_price
+
+    return redirect(
+        request.referrer
+        or url_for("views.cart", user=current_user, total_price=total_price)
+    )
 
 
 @views.route("/remove_from_cart", methods=["POST"])
 @login_required
 def remove_from_cart():
-    product_id = request.form.get("product_id")
-    size_id = request.form.get("size_id")
+    cart_item_id = request.form.get("cart_item_id")
 
-    user = User.query.get(current_user.id)
+    cart_item = CartItem.query.get(cart_item_id)
+    user_cart_count = UserCartCount.query.filter_by(user_id=current_user.id).first()
+    if not cart_item:
+        flash("Cart item not found!", "error")
+        return redirect(request.referrer or url_for("views.cart", user=current_user))
 
-    cart_item = CartItem.query.filter_by(
-        user_id=user.id, product_id=product_id, size_id=size_id
-    ).first()
-
-    if cart_item:
+    if cart_item.quantity == 1:
         db.session.delete(cart_item)
-        db.session.commit()
-
-        return redirect(request.referrer or url_for("views.cart", user=current_user))
+        if user_cart_count:
+            user_cart_count.cart_count -= 1
+        else:
+            user_cart_count = UserCartCount(user_id=current_user.id, cart_count=0)
     else:
-        return redirect(request.referrer or url_for("views.cart", user=current_user))
+        cart_item.quantity -= 1
+        if user_cart_count:
+            user_cart_count.cart_count -= 1
+
+    db.session.add(user_cart_count)
+    db.session.commit()
+
+    session["cart_count"] = user_cart_count.cart_count
+
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    total_price = sum(
+        Product.query.get(item.product_id).price * item.quantity for item in cart_items
+    )
+    session["total_price"] = total_price
+
+    flash("Item removed from your shopping cart!", "success")
+
+    return redirect(request.referrer or url_for("views.cart", user=current_user))
