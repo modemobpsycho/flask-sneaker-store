@@ -408,7 +408,7 @@
                                 <i class="fa-solid fa-cart-shopping"></i>
                                 <span
                                     class="badge text-bg-warning cart-badge bg-info rounded-circle"
-                                    >5</span
+                                    >{{ session.get('cart_count', 0) }}</span
                                 >
                             </button>
                             {% endblock fav_cart %}
@@ -437,72 +437,48 @@
                     <div class="table-responsive">
                         <table class="table offcanvasCart-table">
                             <tbody>
+                                {% for item in user_cart %}
                                 <tr>
                                     <td class="product-img-td">
                                         <a href="#"
                                             ><img
-                                                src="assets/img/products/1.jpg"
+                                                src="{{ item.product.image_url }}"
                                                 alt=""
                                         /></a>
                                     </td>
                                     <td>
-                                        <a href="#"
-                                            >Product 1 Lorem ipsum dolor, sit
-                                            amet consectetur adipisicing.</a
+                                        <a href="#">{{ item.product.name }}</a>
+                                    </td>
+                                    <td>${{ item.product.price }}</td>
+                                    <td>&times;{{ item.quantity }}</td>
+                                    <td>
+                                        <form
+                                            action="{{ url_for('views.remove_from_cart') }}"
+                                            method="POST"
                                         >
-                                    </td>
-                                    <td>$65</td>
-                                    <td>&times;1</td>
-                                    <td>
-                                        <button class="btn btn-danger">
-                                            <i
-                                                class="fa-regular fa-circle-xmark"
-                                            ></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="product-img-td">
-                                        <a href="#"
-                                            ><img
-                                                src="assets/img/products/2.jpg"
-                                                alt=""
-                                        /></a>
-                                    </td>
-                                    <td><a href="#">Product 2</a></td>
-                                    <td>$80</td>
-                                    <td>&times;2</td>
-                                    <td>
-                                        <button class="btn btn-danger">
-                                            <i
-                                                class="fa-regular fa-circle-xmark"
-                                            ></i>
-                                        </button>
+                                            <input
+                                                type="hidden"
+                                                name="cart_item_id"
+                                                value="{{ item.cart_item_id }}"
+                                            />
+                                            <button
+                                                class="btn btn-danger"
+                                                type="submit"
+                                            >
+                                                <i
+                                                    class="fa-regular fa-circle-xmark"
+                                                ></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="product-img-td">
-                                        <a href="#"
-                                            ><img
-                                                src="assets/img/products/3.jpg"
-                                                alt=""
-                                        /></a>
-                                    </td>
-                                    <td><a href="#">Product 3</a></td>
-                                    <td>$100</td>
-                                    <td>&times;1</td>
-                                    <td>
-                                        <button class="btn btn-danger">
-                                            <i
-                                                class="fa-regular fa-circle-xmark"
-                                            ></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4" class="text-end">Total:</td>
+                                    <td colspan="4" class="text-end">
+                                        Total: ${{session["total_price"]}}
+                                    </td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -957,6 +933,7 @@
                 ></iframe>
                 {% endblock map %} {% endblock main %}
             </main>
+            {% block footer %}
             <footer class="footer" id="footer">
                 <div class="container-fluid">
                     <div class="row">
@@ -1013,6 +990,7 @@
                     </div>
                 </div>
             </footer>
+            {% endblock %}
         </div>
         <script
             src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
