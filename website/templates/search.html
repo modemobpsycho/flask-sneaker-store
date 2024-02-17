@@ -56,13 +56,21 @@ hide_advantages %} {% endblock %} {% block main %}
                         <p class="product-excerpt">{{ product.description }}</p>
 
                         <div class="product-sizes">
-                            {% for size in product.sizes %}
-                            <div
-                                class="product-size {% if not size.available %}unavailable{% endif %}"
+                            {% for size in product.sizes %} {% if size.available
+                            %}
+                            <button
+                                type="submit"
+                                class="product-size"
+                                name="size_id"
+                                value="{{ size.id }}"
                             >
                                 {{ size.size }}
+                            </button>
+                            {% else %}
+                            <div class="product-size unavailable">
+                                {{ size.size }}
                             </div>
-                            {% endfor %}
+                            {% endif %} {% endfor %}
                         </div>
 
                         <div
@@ -71,34 +79,50 @@ hide_advantages %} {% endblock %} {% block main %}
                             <div class="product-price">
                                 ${{ product.price }}
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <form
-                                        action="{{ url_for('views.add_to_favorites') }}"
-                                        method="POST"
+                            <div class="product-links">
+                                <form
+                                    action="{{ url_for('views.add_to_favorites') }}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="{{ product.id }}"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger add-to-favorites"
                                     >
-                                        <input
-                                            type="hidden"
-                                            name="product_id"
-                                            value="{{ product.id }}"
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="btn btn-outline-danger add-to-favorites"
-                                        >
-                                            <i class="fa-solid fa-heart"></i>
-                                        </button>
-                                    </form>
-                                </div>
+                                        <i class="fa-solid fa-heart"></i>
+                                        LIKE
+                                    </button>
+                                </form>
                             </div>
-                            <div class="product-card">
-                                <div class="product-links">
-                                    <a
-                                        href="/add-to-cart?product_id={{ product.id }}"
+                            <div class="product-links">
+                                <form
+                                    action="{{ url_for('views.add_to_cart') }}"
+                                    method="POST"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="product_id"
+                                        value="{{ product.id }}"
+                                    />
+                                    <input
+                                        type="hidden"
+                                        name="size_id"
+                                        id="selected-size"
+                                        value=""
+                                        required
+                                    />
+                                    <button
+                                        type="submit"
                                         class="btn btn-outline-success add-to-cart"
-                                        ><i class="fas fa-shopping-cart"></i
-                                    ></a>
-                                </div>
+                                    >
+                                        <i class="fas fa-shopping-cart"></i>
+                                        BUY
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -62,6 +62,12 @@ class Favorites(db.Model):
     )
 
 
+class UserCartCount(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
+    cart_count = db.Column(db.Integer, default=0)
+
+
 class UserFavoritesCount(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), unique=True)
@@ -94,3 +100,9 @@ class User(db.Model, UserMixin):
     def remove_from_favorites(self, product):
         if product in self.favorite_products:
             self.favorite_products.remove(product)
+
+    def get_cart_count(self):
+        return CartItem.query.filter_by(user_id=self.id).count()
+
+    def has_cart(self, product):
+        return product in self.cart_items
