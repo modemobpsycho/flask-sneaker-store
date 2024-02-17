@@ -1,140 +1,179 @@
 {% extends "base.html" %} {% block hide_carousel %} {% endblock %} {% block
 hide_advantages %} {% endblock %} {% block main %}
-
 <main class="main">
     <div class="container-fluid">
+        <div id="flash-modal" class="flash-modal">
+            <div class="flash-modal-content">
+                <span class="flash-modal-message"></span>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %} {% for category, message in messages %} {% if
+                category == 'error' %}
+                <div
+                    class="alert alert-danger alter-dismissable fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {% else %}
+                <div
+                    class="alert alert-info alter-dismissable fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {% endif %} {% endfor %} {% endif %} {% endwith %}
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-8 mb-3">
                 <div class="cart-content p-3 h-100 bg-white">
                     <div class="table-responsive">
                         <table class="table align-middle table-hover">
-                            <thead class="table-dark">
+                            <thead>
                                 <tr>
                                     <th>Photo</th>
                                     <th>Product</th>
-                                    <th>Price</th>
-                                    <th>Qty</th>
-                                    <th><i class="fa-regular fa-trash-can"></i></th>
+                                    <th style="padding-left: 10px">Price</th>
+                                    <th style="padding-left: 0px">Qty</th>
+                                    <th style="padding-left: 20px">
+                                        <i class="fa-regular fa-trash-can"></i>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for item in user_cart %}
                                 <tr>
                                     <td class="product-img-td">
-                                        <a href="#">
-                                            <img src="assets/img/products/1.jpg" alt="">
+                                        <a
+                                            href="{{url_for('views.product_page')}}"
+                                        >
+                                            <img
+                                                src="{{ item.product.image_url }}"
+                                                alt=""
+                                                width="150"
+                                                height="150"
+                                            />
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="#" class="cart-content-title">
-                                            Product 1 Lorem ipsum dolor, sit amet consectetur adipisicing.
+                                        <a
+                                            href="{{url_for('views.product_page')}}"
+                                            class="cart-content-title"
+                                            style="font-size: 20px"
+                                        >
+                                            {{ item.product.name }}
                                         </a>
+                                        <p>
+                                            {% if item.size != "0" %} Size: {{
+                                            item.size|default("N/A") }} {% else
+                                            %} {% endif %}
+                                        </p>
                                     </td>
-                                    <td>$65</td>
-                                    <td>
-                                        <input type="number" value="1" class="form-control cart-qty">
+                                    <td style="font-size: 20px">
+                                        ${{ item.product.price }}
+                                    </td>
+                                    <td style="font-size: 20px">
+                                        {{ item.quantity }}
                                     </td>
                                     <td>
-                                        <button class="btn btn-danger">
-                                            <i class="fa-regular fa-circle-xmark"></i>
-                                        </button>
+                                        <form
+                                            action="{{ url_for('views.remove_from_cart') }}"
+                                            method="POST"
+                                        >
+                                            <input
+                                                type="hidden"
+                                                name="cart_item_id"
+                                                value="{{ item.cart_item_id }}"
+                                            />
+                                            <button
+                                                class="btn btn-danger"
+                                                type="submit"
+                                            >
+                                                <i
+                                                    class="fa-regular fa-circle-xmark"
+                                                ></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="product-img-td">
-                                        <a href="#">
-                                            <img src="assets/img/products/2.jpg" alt="">
-                                        </a>
-                                    </td>
-                                    <td><a href="#" class="cart-content-title">Product 2</a></td>
-                                    <td>$80</td>
-                                    <td>
-                                        <input type="number" value="2" class="form-control cart-qty">
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger">
-                                            <i class="fa-regular fa-circle-xmark"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="product-img-td">
-                                        <a href="#">
-                                            <img src="assets/img/products/3.jpg" alt="">
-                                        </a>
-                                    </td>
-                                    <td><a href="#" class="cart-content-title">Product 3</a></td>
-                                    <td>$100</td>
-                                    <td>
-                                        <input type="number" value="1" class="form-control cart-qty">
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger">
-                                            <i class="fa-regular fa-circle-xmark"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="5" class="text-end">
-                                        <button class="btn btn-outline-warning">Update Cart</button>
+                                        <button class="btn btn-outline-info">
+                                            Update Cart
+                                        </button>
                                     </td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
-
                 </div>
             </div>
 
             <div class="col-lg-4 mb-3">
-
                 <div class="cart-summary p-3 sidebar">
                     <h5 class="section-title"><span>Cart Summary</span></h5>
 
                     <div class="d-flex justify-content-between my-3">
                         <h6>Subtotal</h6>
-                        <h6>$1000</h6>
+                        <h6>${{session["total_price"]}}</h6>
                     </div>
 
                     <div class="d-flex justify-content-between my-3">
                         <h6>Coupon</h6>
-                        <h6>-$20</h6>
+                        <h6>$0</h6>
                     </div>
 
-                    <div class="d-flex justify-content-between my-3 border-bottom">
+                    <div
+                        class="d-flex justify-content-between my-3 border-bottom"
+                    >
                         <h6>Shipping</h6>
-                        <h6>$10</h6>
+                        <h6>$0</h6>
                     </div>
 
-                    <button class="btn btn-link px-0 btn-coupon" data-bs-toggle="collapse"
-                        data-bs-target="#collapseCoupon">
+                    <button
+                        class="btn btn-link px-0 btn-coupon"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseCoupon"
+                    >
                         Have a Coupon?
                     </button>
 
                     <div class="input-group collapse" id="collapseCoupon">
-                        <input type="text" class="form-control" placeholder="Coupon Code">
-                        <button class="btn btn-warning">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Coupon Code"
+                        />
+                        <button class="btn btn-info">
                             <i class="fa-regular fa-circle-check"></i>
                         </button>
                     </div>
 
                     <div class="d-flex justify-content-between my-3">
                         <h3>Total</h3>
-                        <h3>$990</h3>
+                        <h3>${{session["total_price"]}}</h3>
                     </div>
 
                     <div class="d-grid">
-                        <a href="#" class="btn btn-warning">Checkout</a>
+                        <a
+                            href="{{url_for('views.checkout')}}"
+                            class="btn btn-info"
+                            >Checkout</a
+                        >
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </div>
-
 </main>
-</div>
 {% endblock %}
