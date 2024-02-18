@@ -19,6 +19,18 @@
     });
 })();
 
+window.addEventListener("beforeunload", function () {
+    sessionStorage.setItem("scrollPosition", window.pageYOffset);
+});
+
+window.addEventListener("load", function () {
+    var scrollPosition = sessionStorage.getItem("scrollPosition");
+    if (scrollPosition !== null) {
+        window.scrollTo(0, scrollPosition);
+        sessionStorage.removeItem("scrollPosition");
+    }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     var flashMessages = document.querySelectorAll(
         ".flash-message[data-auto-dismiss]"
