@@ -94,9 +94,12 @@ def favorites():
     for cart_item in cart_items:
         product = Product.query.get(cart_item.product_id)
         if product:
+            size = Size.query.get(cart_item.size_id)
+            size_value = size.size if size else "0"
             item = {
                 "cart_item": cart_item,
                 "product": product,
+                "size": size_value,
                 "quantity": cart_item.quantity,
                 "cart_item_id": cart_item.id,
             }
@@ -120,7 +123,22 @@ def order():
 @views.route("/checkout")
 @login_required
 def checkout():
-    return render_template("checkout.html", user=current_user)
+    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart = []
+    for cart_item in cart_items:
+        product = Product.query.get(cart_item.product_id)
+        if product:
+            size = Size.query.get(cart_item.size_id)
+            size_value = size.size if size else "0"
+            item = {
+                "cart_item": cart_item,
+                "product": product,
+                "size": size_value,
+                "quantity": cart_item.quantity,
+                "cart_item_id": cart_item.id,
+            }
+            user_cart.append(item)
+    return render_template("checkout.html", user=current_user, user_cart=user_cart)
 
 
 @views.route("/product")
