@@ -1,8 +1,9 @@
+from datetime import datetime
+import json
 import random
 from flask import (
     Blueprint,
     flash,
-    jsonify,
     redirect,
     render_template,
     request,
@@ -14,6 +15,7 @@ from sqlalchemy import func
 from .models import (
     CartItem,
     Favorites,
+    Order,
     Product,
     Size,
     User,
@@ -44,6 +46,7 @@ def home():
                 "cart_item_id": cart_item.id,
             }
             user_cart.append(item)
+
     return render_template(
         "base.html",
         user=current_user,
@@ -120,25 +123,90 @@ def order():
     return render_template("order.html", user=current_user)
 
 
-@views.route("/checkout")
+@views.route("/checkout", methods=["POST", "GET"])
 @login_required
 def checkout():
-    cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
-    user_cart = []
-    for cart_item in cart_items:
-        product = Product.query.get(cart_item.product_id)
-        if product:
-            size = Size.query.get(cart_item.size_id)
-            size_value = size.size if size else "0"
-            item = {
-                "cart_item": cart_item,
-                "product": product,
-                "size": size_value,
-                "quantity": cart_item.quantity,
-                "cart_item_id": cart_item.id,
-            }
-            user_cart.append(item)
-    return render_template("checkout.html", user=current_user, user_cart=user_cart)
+    if request.method == "POST":
+        name = request.form.get("name")
+        email = request.form.get("email")
+        phone = request.form.get("phone")
+        country = request.form.get("country")
+        city = request.form.get("city")
+        address = request.form.get("address")
+        comment = request.form.get("comment")
+
+        cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+        if not cart_items:
+            flash(
+                "Your cart is empty. Please add items to your cart before checking out.",
+                "warning",
+            )
+            return redirect(url_for("views.checkout"))
+
+        cart_data = ""
+        for index, cart_item in enumerate(cart_items):
+            product = Product.query.get(cart_item.product_id)
+            if product:
+                size = Size.query.get(cart_item.size_id)
+                size_value = size.size if size else "0"
+                item = f"Product ID: {cart_item.product_id}, Name: {product.name}, Size: {size_value}, Quantity: {cart_item.quantity}, Cart Item ID: {cart_item.id}"
+                cart_data += item
+                if index < len(cart_items) - 1:
+                    cart_data += ", "
+
+        order = Order(
+            name=name,
+            email=email,
+            phone=phone,
+            country=country,
+            city=city,
+            address=address,
+            comment=comment,
+            timestamp=datetime.now(),
+            user_id=current_user.id,
+            cart_data=cart_data,
+        )
+
+        db.session.add(order)
+        db.session.commit()
+
+        CartItem.query.filter_by(user_id=current_user.id).delete()
+        db.session.commit()
+
+        user_cart_count = UserCartCount.query.filter_by(user_id=current_user.id).first()
+        if user_cart_count:
+            user_cart_count.cart_count = 0
+        else:
+            user_cart_count = UserCartCount(user_id=current_user.id, cart_count=0)
+
+        db.session.add(user_cart_count)
+        db.session.commit()
+
+        session["cart_count"] = 0
+
+        session["total_price"] = 0
+        session.pop("total_price", None)
+        flash("Your order has been placed successfully!", "success")
+
+        return redirect(url_for("views.home"))
+    else:
+        cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
+        user_cart = []
+        for cart_item in cart_items:
+            product = Product.query.get(cart_item.product_id)
+            if product:
+                size = Size.query.get(cart_item.size_id)
+                size_value = size.size if size else "0"
+                item = {
+                    "cart_item": cart_item,
+                    "product": product,
+                    "size": size_value,
+                    "quantity": cart_item.quantity,
+                    "cart_item_id": cart_item.id,
+                }
+                user_cart.append(item)
+
+        return render_template("checkout.html", user=current_user, user_cart=user_cart)
 
 
 @views.route("/product")
