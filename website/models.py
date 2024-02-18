@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_login import UserMixin
+from sqlalchemy import JSON, DateTime
 from sqlalchemy.sql import func
 from . import db
 
@@ -106,3 +107,30 @@ class User(db.Model, UserMixin):
 
     def has_cart(self, product):
         return product in self.cart_items
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    country = db.Column(db.String(255), nullable=False)
+    city = db.Column(db.String(255), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    comment = db.Column(db.Text)
+    timestamp = db.Column(DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, nullable=False)
+    cart_data = db.Column(JSON)
+
+    products = db.relationship(
+        "Product",
+        secondary="order_product",
+        backref=db.backref("orders", lazy="dynamic"),
+    )
+
+
+order_product = db.Table(
+    "order_product",
+    db.Column("order_id", db.Integer, db.ForeignKey("order.id"), primary_key=True),
+    db.Column("product_id", db.Integer, db.ForeignKey("product.id"), primary_key=True),
+)
