@@ -1,5 +1,4 @@
 from datetime import datetime
-import json
 import random
 from flask import (
     Blueprint,
@@ -120,7 +119,69 @@ def favorites():
 @views.route("/order")
 @login_required
 def order():
-    return render_template("order.html", user=current_user)
+    user_orders = Order.query.filter_by(user_id=current_user.id).all()
+
+    processed_orders = []
+    for order in user_orders:
+        cart_items_str = order.cart_data.split(",")
+        cart_items = []
+        product_id = None
+        name = None
+        size = None
+        quantity = None
+        cart_item_id = None
+        for item_str in cart_items_str:
+            item_data = item_str.strip().split(":")
+            if len(item_data) == 2:
+                field_name = item_data[0].strip()
+                field_value = item_data[1].strip()
+                if field_name == "Product ID":
+                    product_id = int(field_value)
+                elif field_name == "Name":
+                    name = field_value
+                elif field_name == "Size":
+                    size = int(field_value)
+                elif field_name == "Quantity":
+                    quantity = int(field_value)
+                elif field_name == "Cart Item ID":
+                    cart_item_id = int(field_value)
+
+                if (
+                    product_id is not None
+                    and name is not None
+                    and size is not None
+                    and quantity is not None
+                    and cart_item_id is not None
+                ):
+                    cart_item = {
+                        "product_id": product_id,
+                        "name": name,
+                        "size": size,
+                        "quantity": quantity,
+                        "cart_item_id": cart_item_id,
+                    }
+                    cart_items.append(cart_item)
+                    product_id = None
+                    name = None
+                    size = None
+                    quantity = None
+                    cart_item_id = None
+
+        processed_order = {
+            "id": order.id,
+            "name": order.name,
+            "email": order.email,
+            "phone": order.phone,
+            "cart_items": cart_items,
+        }
+        processed_orders.append(processed_order)
+
+    return render_template(
+        "order.html",
+        user_orders=user_orders,
+        processed_orders=processed_orders,
+        user=current_user,
+    )
 
 
 @views.route("/checkout", methods=["POST", "GET"])

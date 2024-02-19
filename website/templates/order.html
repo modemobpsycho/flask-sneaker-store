@@ -1,3 +1,141 @@
-{% extends "base.html" %} {% block title %}Order{% endblock %} {%block content %}
-<h1>This is order</h1>
-{% endblock%}
+{% extends "base.html" %} {% block hide_carousel %} {% endblock %} {% block
+hide_advantages %} {% endblock %} {% block main %}
+
+<main class="main">
+    <div class="container-fluid">
+        <div class="row">
+            {% for order in user_orders %}
+            <div class="col-lg-12 mb-3">
+                <div class="Checkout p-3 h-100 bg-white">
+                    <h1 class="section-title h3">
+                        <span>Information about order</span>
+                    </h1>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label h6">Name</label>
+                            <p class="form-control">{{order.name}}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="email" class="form-label h6"
+                                >Email</label
+                            >
+                            <p class="form-control">{{order.email}}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label h6"
+                                >Phone</label
+                            >
+                            <p class="form-control">{{order.phone}}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="country" class="form-label h6"
+                                >Country</label
+                            >
+                            <p class="form-control">{{order.country}}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="city" class="form-label h6">City</label>
+                            <p class="form-control">{{order.city}}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="address" class="form-label h6"
+                                >Address</label
+                            >
+                            <p class="form-control">{{order.address}}</p>
+                        </div>
+                        {% if order.comment == "" %} {% else %}
+                        <div class="col">
+                            <label for="comment" class="form-label h6"
+                                >Comment</label
+                            >
+                            <p class="form-control">{{order.comment}}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 mb-3">
+                <div class="cart-summary p-3 sidebar h-100 bg-white">
+                    <h1 class="section-title h3">
+                        <span>Cart's products:</span>
+                    </h1>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in processed_orders %} {% for
+                                cart_item in order.cart_items %}
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="{{ url_for('views.product_page', product_id=cart_item['product_id']) }}"
+                                            class="cart-content-title"
+                                        >
+                                            {{ cart_item['name'] }}
+                                        </a>
+                                    </td>
+                                    <td>{{ cart_item['size'] }}</td>
+                                    <td>{{ cart_item['quantity'] }}</td>
+                                </tr>
+                                {% endfor %} {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end">
+                                        ${{ session["total_price"] }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- <div class="form-check">
+                        <input
+                            name="payment-method"
+                            class="form-check-input"
+                            type="radio"
+                            name="payment-method1"
+                            id="payment-method1"
+                            value="payment-method1"
+                            required
+                        />
+                        <label class="form-check-label" for="payment-method1">
+                            Card payment
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input
+                            name="payment-method"
+                            class="form-check-input"
+                            type="radio"
+                            name="payment-method2"
+                            id="payment-method2"
+                            value="payment-method2"
+                            required
+                        />
+                        <label class="form-check-label" for="payment-method2">
+                            Payment on delivery
+                        </label>
+                    </div> -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}
