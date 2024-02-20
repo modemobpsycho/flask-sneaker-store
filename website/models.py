@@ -6,7 +6,7 @@ from . import db
 
 
 class CustomSessionModel(db.Model):
-    __tablename__ = "sessions"
+    __tablename__: str = "sessions"
 
     session_id = db.Column(db.String(255), primary_key=True)
     data = db.Column(db.Text)
@@ -85,27 +85,27 @@ class User(db.Model, UserMixin):
     )
     cart_items = db.relationship("CartItem", backref="user", lazy="dynamic")
 
-    def add_to_favorites(self, product):
+    def add_to_favorites(self, product) -> None:
         if product not in self.favorite_products:
             self.favorite_products.append(product)
 
-    def has_favorited(self, product):
+    def has_favorited(self, product) -> bool:
         return product in self.favorites
 
-    def get_favorites_count(self):
+    def get_favorites_count(self) -> int:
         return Favorites.query.filter_by(user_id=self.id).count()
 
     def get_favorites(self):
         return self.favorites.all()
 
-    def remove_from_favorites(self, product):
+    def remove_from_favorites(self, product) -> None:
         if product in self.favorite_products:
             self.favorite_products.remove(product)
 
-    def get_cart_count(self):
+    def get_cart_count(self) -> int:
         return CartItem.query.filter_by(user_id=self.id).count()
 
-    def has_cart(self, product):
+    def has_cart(self, product) -> bool:
         return product in self.cart_items
 
 
