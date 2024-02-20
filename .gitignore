@@ -6,3 +6,4 @@ __pycache__/
 images
 owlcarousel
 main.html
+.env
