@@ -40,9 +40,9 @@ hide_advantages %} {% endblock %} {% block main %}
                                 <tr>
                                     <th>Photo</th>
                                     <th>Product</th>
-                                    <th style="padding-left: 10px">Price</th>
-                                    <th style="padding-left: 0px">Qty</th>
-                                    <th style="padding-left: 20px">
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>
                                         <i class="fa-regular fa-trash-can"></i>
                                     </th>
                                 </tr>
@@ -66,7 +66,6 @@ hide_advantages %} {% endblock %} {% block main %}
                                         <a
                                             href="{{url_for('views.product_page')}}"
                                             class="cart-content-title"
-                                            style="font-size: 20px"
                                         >
                                             {{ item.product.name }}
                                         </a>
@@ -76,12 +75,8 @@ hide_advantages %} {% endblock %} {% block main %}
                                             %} {% endif %}
                                         </p>
                                     </td>
-                                    <td style="font-size: 20px">
-                                        ${{ item.product.price }}
-                                    </td>
-                                    <td style="font-size: 20px">
-                                        {{ item.quantity }}
-                                    </td>
+                                    <td>${{ item.product.price }}</td>
+                                    <td>{{ item.quantity }}</td>
                                     <td>
                                         <form
                                             action="{{ url_for('views.remove_from_cart') }}"
@@ -105,15 +100,6 @@ hide_advantages %} {% endblock %} {% block main %}
                                 </tr>
                                 {% endfor %}
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5" class="text-end">
-                                        <button class="btn btn-outline-info">
-                                            Update Cart
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>

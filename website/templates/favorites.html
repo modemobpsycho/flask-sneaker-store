@@ -81,56 +81,58 @@ hide_advantages %} {% endblock %} {% block main %}
                         <div
                             class="product-bottom-details d-flex justify-content-between"
                         >
-                            <div class="product-price">
+                            <div
+                                class="product-price d-flex justify-content-center align-items-center"
+                            >
                                 ${{ product.price }}
                             </div>
-                            <div class="product-links">
-                                <form
-                                    action="{{ url_for('views.remove_from_favorites') }}"
-                                    method="POST"
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="product_id"
-                                        value="{{ product.id }}"
-                                    />
-                                    <button
-                                        type="submit"
-                                        class="btn btn-outline-danger remove_from_favorites"
+                            <div class="d-flex">
+                                <div class="product-links me-2">
+                                    <form
+                                        action="{{ url_for('views.remove_from_favorites') }}"
+                                        method="POST"
                                     >
-                                        <i
-                                            class="fa fa-times"
-                                            aria-hidden="true"
-                                        ></i>
-                                        DEL
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="product-links">
-                                <form
-                                    action="{{ url_for('views.add_to_cart') }}"
-                                    method="POST"
-                                >
-                                    <input
-                                        type="hidden"
-                                        name="product_id"
-                                        value="{{ product.id }}"
-                                    />
-                                    <input
-                                        type="hidden"
-                                        name="size_id"
-                                        id="selected-size"
-                                        value=""
-                                        required
-                                    />
-                                    <button
-                                        type="submit"
-                                        class="btn btn-outline-success add-to-cart"
+                                        <input
+                                            type="hidden"
+                                            name="product_id"
+                                            value="{{ product.id }}"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger remove_from_favorites"
+                                        >
+                                            <i
+                                                class="fa fa-times"
+                                                aria-hidden="true"
+                                            ></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="product-links">
+                                    <form
+                                        action="{{ url_for('views.add_to_cart') }}"
+                                        method="POST"
                                     >
-                                        <i class="fas fa-shopping-cart"></i>
-                                        BUY
-                                    </button>
-                                </form>
+                                        <input
+                                            type="hidden"
+                                            name="product_id"
+                                            value="{{ product.id }}"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            name="size_id"
+                                            id="selected-size"
+                                            value=""
+                                            required
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-success add-to-cart"
+                                        >
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
