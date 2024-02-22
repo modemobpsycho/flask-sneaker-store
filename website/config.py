@@ -10,6 +10,11 @@ db = SQLAlchemy()
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
+    MAIL_SERVER = os.getenv("MAIL_SERVER")
+    MAIL_PORT = os.getenv("MAIL_PORT")
+    MAIL_USE_TLS = os.getenv("MAIL_USE_TLS")
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     db_path = os.path.join(
         os.path.abspath(os.path.dirname(__file__)), "../instance/database.db"
     )

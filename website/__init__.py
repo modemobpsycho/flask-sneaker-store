@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
+from flask_mail import *
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_session import Session
@@ -11,6 +12,13 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
+    mail = Mail(app)
+    app.config["MAIL_SERVER"] = "smtp.mail.ru"
+    app.config["MAIL_PORT"] = 465
+    app.config["MAIL_USERNAME"] = Config.MAIL_USERNAME
+    app.config["MAIL_PASSWORD"] = Config.MAIL_PASSWORD
+    app.config["MAIL_USE_TLS"] = False
+    app.config["MAIL_USE_SSL"] = True
     app.config["SECRET_KEY"] = Config.SECRET_KEY
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{Config.DB_NAME}"
 

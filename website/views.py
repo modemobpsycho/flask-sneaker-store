@@ -11,7 +11,7 @@ from flask import (
     url_for,
     session,
 )
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, login_user
 from sqlalchemy import func
 from .models import (
     CartItem,
