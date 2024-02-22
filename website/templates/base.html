@@ -775,10 +775,10 @@
                                         <p class="product-excerpt">
                                             {{ product.description }}
                                         </p>
-
                                         <form
-                                            action="{{ url_for('views.add_to_cart') }}"
+                                            action="/add_to_cart"
                                             method="post"
+                                            class="product-form"
                                         >
                                             <input
                                                 type="hidden"
@@ -814,6 +814,7 @@
                                                 ${{ product.price }}
                                             </div>
                                             <div class="d-flex">
+                                                {% if user.is_authenticated %}
                                                 <div class="product-links me-2">
                                                     <form
                                                         action="{{ url_for('views.add_to_favorites') }}"
@@ -861,6 +862,7 @@
                                                         </button>
                                                     </form>
                                                 </div>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>

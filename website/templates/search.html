@@ -6,7 +6,7 @@ hide_advantages %} {% endblock %} {% block main %}
             <div class="col-12 text-center">
                 <h2 class="section-title">
                     <span style="padding-left: 1rem">
-                        YOU WANT IT YOU GOT IT
+                        YOU WANT IT? YOU GOT IT!
                     </span>
                 </h2>
             </div>
@@ -54,25 +54,34 @@ hide_advantages %} {% endblock %} {% block main %}
                             <a href="/product">{{ product.name }}</a>
                         </h4>
                         <p class="product-excerpt">{{ product.description }}</p>
-
-                        <div class="product-sizes">
-                            {% for size in product.sizes %} {% if size.available
-                            %}
-                            <button
-                                type="submit"
-                                class="product-size"
-                                name="size_id"
-                                value="{{ size.id }}"
-                            >
-                                {{ size.size }}
-                            </button>
-                            {% else %}
-                            <div class="product-size unavailable">
-                                {{ size.size }}
+                        <form
+                            action="/add_to_cart"
+                            method="post"
+                            class="product-form"
+                        >
+                            <input
+                                type="hidden"
+                                name="product_id"
+                                value="{{ product.id }}"
+                            />
+                            <div class="product-sizes">
+                                {% for size in product.sizes %} {% if
+                                size.available %}
+                                <button
+                                    type="submit"
+                                    class="product-size"
+                                    name="size_id"
+                                    value="{{ size.id }}"
+                                >
+                                    {{ size.size }}
+                                </button>
+                                {% else %}
+                                <div class="product-size unavailable">
+                                    {{ size.size }}
+                                </div>
+                                {% endif %} {% endfor %}
                             </div>
-                            {% endif %} {% endfor %}
-                        </div>
-
+                        </form>
                         <div
                             class="product-bottom-details d-flex justify-content-between"
                         >
@@ -82,6 +91,7 @@ hide_advantages %} {% endblock %} {% block main %}
                                 ${{ product.price }}
                             </div>
                             <div class="d-flex">
+                                {% if user.is_authenticated %}
                                 <div class="product-links me-2">
                                     <form
                                         action="{{ url_for('views.add_to_favorites') }}"
@@ -125,6 +135,7 @@ hide_advantages %} {% endblock %} {% block main %}
                                         </button>
                                     </form>
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
