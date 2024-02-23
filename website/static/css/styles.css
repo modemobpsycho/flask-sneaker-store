@@ -337,6 +337,18 @@ label.required::before {
     font-size: 0.8rem;
 }
 
+.product-order-info {
+    border-width: 5px 5px 0px 5px;
+    border-style: solid;
+    border-color: var(--contrast-color);
+}
+
+.product-order-cart {
+    border-width: 0px 5px 5px 5px;
+    border-style: solid;
+    border-color: var(--contrast-color);
+}
+
 .owl-carousel-full .owl-item img {
     display: inline-block;
     width: auto;
