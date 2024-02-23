@@ -121,6 +121,7 @@ class Order(db.Model):
     timestamp = db.Column(DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, nullable=False)
     cart_data = db.Column(JSON)
+    total_price = db.Column(db.Float, nullable=False, default=0.0)
 
     products = db.relationship(
         "Product",

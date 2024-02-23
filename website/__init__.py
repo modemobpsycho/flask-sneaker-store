@@ -13,12 +13,12 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     mail = Mail(app)
-    app.config["MAIL_SERVER"] = "smtp.mail.ru"
-    app.config["MAIL_PORT"] = 465
+    app.config["MAIL_SERVER"] = Config.MAIL_SERVER
+    app.config["MAIL_PORT"] = Config.MAIL_PORT
     app.config["MAIL_USERNAME"] = Config.MAIL_USERNAME
     app.config["MAIL_PASSWORD"] = Config.MAIL_PASSWORD
-    app.config["MAIL_USE_TLS"] = False
-    app.config["MAIL_USE_SSL"] = True
+    app.config["MAIL_USE_TLS"] = Config.MAIL_USE_TLS
+    app.config["MAIL_USE_SSL"] = Config.MAIL_USE_SSL
     app.config["SECRET_KEY"] = Config.SECRET_KEY
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{Config.DB_NAME}"
 
