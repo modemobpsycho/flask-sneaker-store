@@ -12,17 +12,18 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
+from typing import Union
 
 auth = Blueprint("auth", __name__)
 
 
 @auth.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> str:
     if request.method == "POST":
-        email: str | None = request.form.get("email")
-        password: str | None = request.form.get("password")
+        email: str = request.form.get("email")
+        password: str = request.form.get("password")
 
-        user = User.query.filter_by(email=email).first()
+        user: Union[User, None] = User.query.filter_by(email=email).first()
         if user:
             if check_password_hash(user.password, password):
                 flash("Logged in successfully!", category="success")
@@ -52,14 +53,14 @@ def logout() -> Response:
 @auth.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
-        email: str | None = request.form.get("email")
-        first_name: str | None = request.form.get("firstName")
-        password1: str | None = request.form.get("password1")
-        password2: str | None = request.form.get("password2")
+        email: str = request.form.get("email")
+        first_name: str = request.form.get("firstName")
+        password1: str = request.form.get("password1")
+        password2: str = request.form.get("password2")
 
-        user = User.query.filter_by(email=email).first()
+        user: Union[User, None] = User.query.filter_by(email=email).first()
         if user:
-            flash("Email already exist.", category="error")
+            flash("Email already exists.", category="error")
         elif len(email) < 4:
             flash("Email must be greater than 4 characters.", category="error")
         elif len(first_name) < 2:

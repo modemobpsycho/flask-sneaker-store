@@ -1,6 +1,3 @@
-from datetime import datetime
-import random
-from typing import Any, Dict, List, Literal, Union
 from flask import (
     Blueprint,
     Response,
@@ -23,6 +20,10 @@ from .models import (
     UserCartCount,
     UserFavoritesCount,
 )
+from datetime import datetime
+import json
+import random
+from typing import Any, Dict, List, Literal, Optional, Union
 from . import db
 
 views = Blueprint("views", __name__)
@@ -94,22 +95,25 @@ def cart() -> str:
 @views.route("/favorites")
 @login_required
 def favorites() -> str:
-    favorites_count = current_user.get_favorites_count()
-    favorites: List = Favorites.query.filter_by(user_id=current_user.id).all()
-    user_favorites: list = []
+    favorites_count: int = current_user.get_favorites_count()
+    favorites: List[Favorites] = Favorites.query.filter_by(
+        user_id=current_user.id
+    ).all()
+    user_favorites: List[Product] = []
 
     for favorite in favorites:
-        product = Product.query.get(favorite.product_id)
-        user_favorites.append(product)
-
-    cart_items: List = CartItem.query.filter_by(user_id=current_user.id).all()
-    user_cart: list = []
-    for cart_item in cart_items:
-        product = Product.query.get(cart_item.product_id)
+        product: Product = Product.query.get(favorite.product_id)
         if product:
-            size = Size.query.get(cart_item.size_id)
-            size_value: Any | Literal["0"] = size.size if size else "0"
-            item: dict[str, Any] = {
+            user_favorites.append(product)
+
+    cart_items: List[CartItem] = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart: List[Dict[str, Any]] = []
+    for cart_item in cart_items:
+        product: Product = Product.query.get(cart_item.product_id)
+        if product:
+            size: Size | None = Size.query.get(cart_item.size_id)
+            size_value: Any = size.size if size else "0"
+            item: Dict[str, Any] = {
                 "cart_item": cart_item,
                 "product": product,
                 "size": size_value,
@@ -130,66 +134,28 @@ def favorites() -> str:
 @views.route("/order")
 @login_required
 def order() -> str:
-    user_orders: List = Order.query.filter_by(user_id=current_user.id).all()
+    user_orders: List[Order] = Order.query.filter_by(user_id=current_user.id).all()
 
-    processed_orders: list = []
+    processed_orders: List[Dict[str, Any]] = []
     for order in user_orders:
-        cart_items_str = order.cart_data.split(",")
-        cart_items: list = []
-        product_id = None
-        name = None
-        size = None
-        quantity = None
-        cart_item_id = None
-        for item_str in cart_items_str:
-            item_data = item_str.strip().split(":")
-            if len(item_data) == 2:
-                field_name = item_data[0].strip()
-                field_value = item_data[1].strip()
-                if field_name == "Product ID":
-                    product_id = int(field_value)
-                elif field_name == "Name":
-                    name = field_value
-                elif field_name == "Size":
-                    size = int(field_value)
-                elif field_name == "Quantity":
-                    quantity = int(field_value)
-                elif field_name == "Cart Item ID":
-                    cart_item_id = int(field_value)
+        cart_items = json.loads(order.cart_data)
 
-                if (
-                    product_id is not None
-                    and name is not None
-                    and size is not None
-                    and quantity is not None
-                    and cart_item_id is not None
-                ):
-                    cart_item: dict[str, Any] = {
-                        "product_id": product_id,
-                        "name": name,
-                        "size": size,
-                        "quantity": quantity,
-                        "cart_item_id": cart_item_id,
-                    }
-                    cart_items.append(cart_item)
-                    product_id = None
-                    name = None
-                    size = None
-                    quantity = None
-                    cart_item_id = None
-
-        processed_order: dict[str, Any] = {
+        processed_order: Dict[str, Any] = {
             "id": order.id,
             "name": order.name,
             "email": order.email,
             "phone": order.phone,
+            "country": order.country,
+            "comment": order.comment,
+            "city": order.city,
+            "address": order.address,
             "cart_items": cart_items,
+            "total_price": order.total_price,
         }
         processed_orders.append(processed_order)
 
     return render_template(
         "order.html",
-        user_orders=user_orders,
         processed_orders=processed_orders,
         user=current_user,
     )
@@ -197,17 +163,19 @@ def order() -> str:
 
 @views.route("/checkout", methods=["POST", "GET"])
 @login_required
-def checkout() -> Response | str:
+def checkout() -> Union[Response, str]:
     if request.method == "POST":
-        name: str | None = request.form.get("name")
-        email: str | None = request.form.get("email")
-        phone: str | None = request.form.get("phone")
-        country: str | None = request.form.get("country")
-        city: str | None = request.form.get("city")
-        address: str | None = request.form.get("address")
-        comment: str | None = request.form.get("comment")
-
-        cart_items: List = CartItem.query.filter_by(user_id=current_user.id).all()
+        name: str = request.form.get("name", "")
+        email: str = request.form.get("email", "")
+        phone: str = request.form.get("phone", "")
+        country: str = request.form.get("country", "")
+        city: str = request.form.get("city", "")
+        address: str = request.form.get("address", "")
+        comment: str = request.form.get("comment", "")
+        total_price = session.get("total_price")
+        cart_items: List[CartItem] = CartItem.query.filter_by(
+            user_id=current_user.id
+        ).all()
         if not cart_items:
             flash(
                 "Your cart is empty. Please add items to your cart before checking out.",
@@ -215,18 +183,20 @@ def checkout() -> Response | str:
             )
             return redirect(url_for("views.checkout"))
 
-        cart_data: Literal[""] = ""
-        for index, cart_item in enumerate(cart_items):
-            product = Product.query.get(cart_item.product_id)
+        cart_data: List[Dict[str, Any]] = []
+        for cart_item in cart_items:
+            product: Product = Product.query.get(cart_item.product_id)
             if product:
-                size = Size.query.get(cart_item.size_id)
-                size_value: Any | Literal["0"] = size.size if size else "0"
-                item: str = (
-                    f"Product ID: {cart_item.product_id}, Name: {product.name}, Size: {size_value}, Quantity: {cart_item.quantity}, Cart Item ID: {cart_item.id}"
-                )
-                cart_data += item
-                if index < len(cart_items) - 1:
-                    cart_data += ", "
+                size: Size = Size.query.get(cart_item.size_id)
+                size_value: Union[str, int] = size.size if size else "0"
+                item: Dict[str, Any] = {
+                    "product_id": cart_item.product_id,
+                    "name": product.name,
+                    "size": size_value,
+                    "quantity": cart_item.quantity,
+                    "cart_item_id": cart_item.id,
+                }
+                cart_data.append(item)
 
         order = Order(
             name=name,
@@ -238,7 +208,8 @@ def checkout() -> Response | str:
             comment=comment,
             timestamp=datetime.now(),
             user_id=current_user.id,
-            cart_data=cart_data,
+            cart_data=json.dumps(cart_data),
+            total_price=total_price,
         )
 
         db.session.add(order)
@@ -265,7 +236,7 @@ def checkout() -> Response | str:
         return redirect(url_for("views.home"))
     else:
         cart_items = CartItem.query.filter_by(user_id=current_user.id).all()
-        user_cart: list = []
+        user_cart = []
         for cart_item in cart_items:
             product = Product.query.get(cart_item.product_id)
             if product:
@@ -286,15 +257,17 @@ def checkout() -> Response | str:
 @views.route("/product")
 def product_page() -> str:
     if current_user.is_authenticated:
-        category = None
-        products: List = Product.query.all()
-        sizes: List = Size.query.all()
-        cart_items: List = CartItem.query.filter_by(user_id=current_user.id).all()
-        user_cart: list = []
+        category: Any = None
+        products: List[Product] = Product.query.all()
+        sizes: List[Size] = Size.query.all()
+        cart_items: List[CartItem] = CartItem.query.filter_by(
+            user_id=current_user.id
+        ).all()
+        user_cart: List[Dict[str, Any]] = []
         for cart_item in cart_items:
-            product = Product.query.get(cart_item.product_id)
+            product: Product = Product.query.get(cart_item.product_id)
             if product:
-                item: dict[str, Any] = {
+                item: Dict[str, Any] = {
                     "cart_item": cart_item,
                     "product": product,
                     "quantity": cart_item.quantity,
@@ -310,22 +283,22 @@ def product_page() -> str:
             user_cart=user_cart,
         )
     else:
-        products = Product.query.all()
-        sizes = Size.query.all()
+        products: List[Product] = Product.query.all()
+        sizes: List[Size] = Size.query.all()
         return render_template(
             "product.html", products=products, sizes=sizes, user=None
         )
 
 
 @views.route("/product/<category>", methods=["GET"])
-def category(category) -> str:
-    products: List = Product.query.filter_by(category=category).all()
-    cart_items: List = CartItem.query.filter_by(user_id=current_user.id).all()
-    user_cart: list = []
+def category(category: str) -> str:
+    products: List[Product] = Product.query.filter_by(category=category).all()
+    cart_items: List[CartItem] = CartItem.query.filter_by(user_id=current_user.id).all()
+    user_cart: List[Dict[str, Any]] = []
     for cart_item in cart_items:
-        product = Product.query.get(cart_item.product_id)
+        product: Product = Product.query.get(cart_item.product_id)
         if product:
-            item: dict[str, Any] = {
+            item: Dict[str, Any] = {
                 "cart_item": cart_item,
                 "product": product,
                 "quantity": cart_item.quantity,
@@ -344,7 +317,7 @@ def category(category) -> str:
 @views.route("/search", methods=["GET", "POST"])
 def search() -> str:
     if request.method == "GET":
-        search_query = request.args.get("search_query")
+        search_query: str = request.args.get("search_query")
         if search_query is not None:
             products: List = Product.query.filter(
                 func.lower(Product.name).like(f"%{search_query.lower()}%")
@@ -361,19 +334,18 @@ def search() -> str:
 @views.route("/add-to-favorites", methods=["POST"])
 @login_required
 def add_to_favorites() -> Response:
-    product_id = request.form.get("product_id")
-    product_id = int(product_id)
+    product_id: Optional[int] = int(request.form.get("product_id"))
 
-    product = Product.query.get(product_id)
+    product: Optional[Product] = Product.query.get(product_id)
 
     if product:
         if not current_user.has_favorited(product):
             current_user.add_to_favorites(product)
             db.session.commit()
 
-            user_favorites_count = UserFavoritesCount.query.filter_by(
-                user_id=current_user.id
-            ).first()
+            user_favorites_count: Optional[UserFavoritesCount] = (
+                UserFavoritesCount.query.filter_by(user_id=current_user.id).first()
+            )
             if user_favorites_count:
                 user_favorites_count.favorites_count += 1
             else:
@@ -401,19 +373,18 @@ def add_to_favorites() -> Response:
 @views.route("/remove-from-favorites", methods=["POST"])
 @login_required
 def remove_from_favorites() -> Response:
-    product_id = request.form.get("product_id")
-    product_id = int(product_id)
+    product_id: Optional[int] = int(request.form.get("product_id"))
 
-    product = Product.query.get(product_id)
+    product: Optional[Product] = Product.query.get(product_id)
 
     if product:
         if current_user.has_favorited(product):
             current_user.remove_from_favorites(product)
             db.session.commit()
 
-            user_favorites_count = UserFavoritesCount.query.filter_by(
-                user_id=current_user.id
-            ).first()
+            user_favorites_count: Optional[UserFavoritesCount] = (
+                UserFavoritesCount.query.filter_by(user_id=current_user.id).first()
+            )
             if user_favorites_count:
                 user_favorites_count.favorites_count -= 1
             else:
@@ -439,12 +410,12 @@ def remove_from_favorites() -> Response:
 @views.route("/add_to_cart", methods=["POST"])
 @login_required
 def add_to_cart() -> Response:
-    product_id = request.form.get("product_id")
-    quantity = request.form.get("quantity")
+    product_id: str = request.form.get("product_id")
+    quantity: str = request.form.get("quantity")
 
-    user = User.query.get(current_user.id)
+    user: User = User.query.get(current_user.id)
 
-    product = Product.query.get(product_id)
+    product: Product = Product.query.get(product_id)
 
     if not product:
         flash("Product is undefined!", "error")
@@ -456,7 +427,9 @@ def add_to_cart() -> Response:
         flash("Please select a size", "error")
         return redirect(request.referrer or url_for("views.cart", user=current_user))
 
-    user_cart_count = UserCartCount.query.filter_by(user_id=current_user.id).first()
+    user_cart_count: UserCartCount = UserCartCount.query.filter_by(
+        user_id=current_user.id
+    ).first()
     if user_cart_count:
         user_cart_count.cart_count += 1
     else:
@@ -465,7 +438,7 @@ def add_to_cart() -> Response:
 
     flash("Successfully added to your shopping cart!", "success")
 
-    cart_item = CartItem.query.filter_by(
+    cart_item: CartItem = CartItem.query.filter_by(
         user_id=user.id, product_id=product_id, size_id=request.form.get("size_id")
     ).first()
 
@@ -485,7 +458,7 @@ def add_to_cart() -> Response:
 
     db.session.commit()
 
-    cart_items: List = CartItem.query.filter_by(user_id=user.id).all()
+    cart_items: List[CartItem] = CartItem.query.filter_by(user_id=user.id).all()
     total_price: int = sum(
         Product.query.get(item.product_id).price * item.quantity for item in cart_items
     )
@@ -502,10 +475,12 @@ def add_to_cart() -> Response:
 @views.route("/remove_from_cart", methods=["POST"])
 @login_required
 def remove_from_cart() -> Response:
-    cart_item_id = request.form.get("cart_item_id")
+    cart_item_id: str = request.form.get("cart_item_id")
 
-    cart_item = CartItem.query.get(cart_item_id)
-    user_cart_count = UserCartCount.query.filter_by(user_id=current_user.id).first()
+    cart_item: CartItem = CartItem.query.get(cart_item_id)
+    user_cart_count: UserCartCount = UserCartCount.query.filter_by(
+        user_id=current_user.id
+    ).first()
     if not cart_item:
         flash("Cart item not found!", "error")
         return redirect(request.referrer or url_for("views.cart", user=current_user))
@@ -526,7 +501,7 @@ def remove_from_cart() -> Response:
 
     session["cart_count"] = user_cart_count.cart_count
 
-    cart_items: List = CartItem.query.filter_by(user_id=current_user.id).all()
+    cart_items: List[CartItem] = CartItem.query.filter_by(user_id=current_user.id).all()
     total_price: int = sum(
         Product.query.get(item.product_id).price * item.quantity for item in cart_items
     )
