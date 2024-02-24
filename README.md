@@ -38,8 +38,9 @@ To get a local copy up and running follow these simple example steps.
 This is an example of how to identify things you need to use the software and how to install them.
 
 -   pip
-`   pip install -r requirements.txt
-  `
+  ```
+  pip install -r requirements.txt
+  ```
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Installation
