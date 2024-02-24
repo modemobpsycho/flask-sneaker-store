@@ -3,7 +3,7 @@ instance
 website/database.db
 venv/
 __pycache__/
-images
+website/static/images
 owlcarousel
 main.html
 .env
